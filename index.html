@@ -1,173 +1,70 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shivish Dharma | Portfolio</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        /* COLOR VARIABLES */
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.8);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --accent: #38bdf8;
+            --skill-bar: #334155;
+            --btn-text: #0f172a;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* LIGHT MODE VARIABLES */
+        [data-theme="light"] {
+            --bg-color: #f1f5f9;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #1e293b;
+            --text-dim: #64748b;
+            --accent: #0284c7;
+            --skill-bar: #e2e8f0;
+            --btn-text: #ffffff;
+            --border: rgba(0, 0, 0, 0.1);
+        }
+
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-family: 'Inter', sans-serif; 
+            transition: background-color 0.4s ease, color 0.4s ease; /* Smooth Fade */
+        }
         
         body {
-            background-color: #0f172a;
+            background-color: var(--bg-color);
             background-image: radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.1) 0px, transparent 50%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #f8fafc;
+            color: var(--text-main);
             padding: 40px 20px;
         }
 
-        /* LIVE CLOCK */
         #clock {
             position: absolute;
             top: 20px;
             right: 20px;
             font-size: 12px;
             font-family: monospace;
-            color: #38bdf8;
+            color: var(--accent);
             background: rgba(56, 189, 248, 0.1);
             padding: 5px 10px;
             border-radius: 5px;
         }
 
-        .card {
-            background: rgba(30, 41, 59, 0.8);
-            width: 100%;
-            max-width: 450px;
-            padding: 40px;
-            border-radius: 28px;
-            text-align: center;
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        .profile-img {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            border: 3px solid #38bdf8;
-            margin-bottom: 15px;
-            object-fit: cover;
-        }
-
-        .role { color: #38bdf8; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 25px; letter-spacing: 2px; }
-
-        /* PROJECTS SECTION */
-        .section-title {
-            font-size: 14px;
-            text-align: left;
-            margin: 20px 0 10px;
-            color: #94a3b8;
-            text-transform: uppercase;
-        }
-
-        .project-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .project-item {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 13px;
-            text-decoration: none;
-            color: white;
-            transition: 0.3s;
-            border: 1px solid transparent;
-        }
-
-        .project-item:hover {
-            border-color: #38bdf8;
-            background: rgba(56, 189, 248, 0.1);
-        }
-
-        /* BUTTONS */
-        .btn {
-            display: block;
-            padding: 14px;
-            background: #38bdf8;
-            color: #0f172a;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 700;
+        /* THEME TOGGLE BUTTON */
+        #theme-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
             cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn:hover { transform: scale(1.03); filter: brightness(1.1); }
-
-        #toast {
-            visibility: hidden;
-            background-color: #38bdf8;
-            color: #0f172a;
-            text-align: center;
-            border-radius: 50px;
-            padding: 12px 24px;
-            position: fixed;
-            bottom: 30px;
-            font-weight: bold;
-            z-index: 100;
-        }
-        #toast.show { visibility: visible; animation: fadeInOut 2s; }
-
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0; }
-            20%, 80% { opacity: 1; }
-        }
-    </style>
-</head>
-<body>
-
-    <div id="clock">00:00:00</div>
-
-    <div class="card">
-        <img src="https://xsgames.co/randomusers/assets/avatars/male/74.jpg" alt="Shivish Dharma" class="profile-img">
-        <h1>Shivish Dharma</h1>
-        <div class="role">Full Stack Developer</div>
-
-        <div class="section-title">My Top Skills</div>
-        <div style="text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; font-size: 13px;">
-            Python • HTML5 • CSS3 • Javascript
-        </div>
-
-        <div class="section-title">Latest Projects</div>
-        <div class="project-grid">
-            <a href="#" class="project-item">🌐 Web App</a>
-            <a href="#" class="project-item">🐍 AI Bot</a>
-            <a href="#" class="project-item">🎮 Indie Game</a>
-            <a href="#" class="project-item">📊 Data Tool</a>
-        </div>
-
-        <div class="btn" id="emailBtn">📧 Copy Gmail Address</div>
-        
-        <p style="margin-top: 25px; font-size: 10px; color: #64748b;">SHIVISH DHARMA &copy; 2025</p>
-    </div>
-
-    <div id="toast">Copied: shivishdharma@gmail.com</div>
-
-    <script>
-        // Copy Email Logic
-        const emailBtn = document.getElementById('emailBtn');
-        const toast = document.getElementById('toast');
-        emailBtn.addEventListener('click', () => {
-            navigator.clipboard.writeText("shivishdharma@gmail.com").then(() => {
-                toast.className = "show";
-                setTimeout(() => { toast.className = ""; }, 2000);
-            });
-        });
-
-        // Live Clock Logic
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString();
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
-</body>
-</html>
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding:
