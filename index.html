@@ -3,112 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Shivish Dharma | Official Portfolio</title>
-    <meta name="description" content="Official website of Shivish Dharma - Full Stack Developer and Tech Enthusiast.">
-    <meta property="og:title" content="Shivish Dharma | Portfolio">
-    <meta property="og:image" content="https://xsgames.co/randomusers/assets/avatars/male/74.jpg">
-    
-    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1005/1005141.png">
-
+    <title>Shivish Dharma | Official</title>
     <style>
+        /* COLOR VARIABLES */
         :root {
-            --bg-color: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.8);
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
+            --bg: #0f172a;
+            --card: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+            --dim: #94a3b8;
             --accent: #38bdf8;
             --border: rgba(255, 255, 255, 0.1);
+            --bar: #334155;
         }
 
         [data-theme="light"] {
-            --bg-color: #f1f5f9;
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --text-main: #1e293b;
-            --text-dim: #64748b;
+            --bg: #f1f5f9;
+            --card: rgba(255, 255, 255, 0.9);
+            --text: #1e293b;
+            --dim: #64748b;
             --accent: #0284c7;
             --border: rgba(0, 0, 0, 0.1);
+            --bar: #e2e8f0;
         }
-
-        /* LOADER ANIMATION */
-        #loader {
-            position: fixed;
-            width: 100%; height: 100vh;
-            background: #0f172a;
-            display: flex; justify-content: center; align-items: center;
-            z-index: 999; transition: opacity 0.5s ease;
-        }
-        .spinner { width: 40px; height: 40px; border: 4px solid #38bdf8; border-top: 4px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: 0.3s; }
-        
-        body { background-color: var(--bg-color); min-height: 100vh; display: flex; justify-content: center; align-items: center; color: var(--text-main); padding: 20px; }
 
-        .card {
-            background: var(--card-bg);
-            width: 100%; max-width: 480px;
-            padding: 40px; border-radius: 28px;
-            backdrop-filter: blur(12px); border: 1px solid var(--border);
-            text-align: center; transform: scale(0.95); opacity: 0;
-            animation: fadeIn 0.8s forwards 0.5s;
+        body {
+            background-color: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text);
+            overflow-x: hidden;
+            padding: 40px 20px;
         }
 
-        @keyframes fadeIn { to { transform: scale(1); opacity: 1; } }
+        /* PURE CSS MATRIX BACKGROUND */
+        .matrix-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: space-around;
+            z-index: -1; opacity: 0.1;
+        }
+        .matrix-bg span {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-family: monospace;
+            font-size: 18px;
+            color: var(--accent);
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+
+        /* NAVIGATION & UI */
+        #theme-toggle { position: fixed; top: 20px; left: 20px; cursor: pointer; padding: 10px 15px; border-radius: 20px; border: 1px solid var(--border); background: var(--card); color: var(--text); z-index: 100; }
+        #clock { position: fixed; top: 20px; right: 20px; font-family: monospace; color: var(--accent); background: var(--card); padding: 5px 10px; border-radius: 5px; border: 1px solid var(--border); }
+
+        /* THE CARD */
+        .card {
+            background: var(--card);
+            width: 100%;
+            max-width: 480px;
+            padding: 40px;
+            border-radius: 30px;
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            text-align: center;
+        }
 
         .profile-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--accent); margin-bottom: 15px; }
+        h1 { font-size: 32px; margin-bottom: 5px; }
         .role { color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 25px; letter-spacing: 2px; }
 
-        .section-title { font-size: 14px; text-align: left; margin: 25px 0 12px; color: var(--text-dim); text-transform: uppercase; font-weight: 700; }
+        .section-title { font-size: 13px; text-align: left; margin: 25px 0 12px; color: var(--dim); text-transform: uppercase; font-weight: 800; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+
+        /* SKILLS */
+        .skill-bar { margin-bottom: 15px; text-align: left; }
+        .skill-info { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+        .bar-bg { background: var(--bar); height: 8px; border-radius: 10px; overflow: hidden; }
+        .bar-fill { background: var(--accent); height: 100%; border-radius: 10px; }
 
         /* CONTACT FORM */
-        form { display: flex; flex-direction: column; gap: 10px; }
-        input, textarea { padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.1); color: var(--text-main); }
-        .btn { padding: 14px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
-        .btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        input, textarea {
+            width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px;
+            border: 1px solid var(--border); background: rgba(0,0,0,0.1); color: var(--text);
+        }
+        .btn {
+            width: 100%; padding: 14px; background: var(--accent); color: white;
+            border: none; border-radius: 12px; font-weight: 700; cursor: pointer;
+        }
+        .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-        #theme-toggle { position: fixed; top: 20px; left: 20px; cursor: pointer; padding: 10px; border-radius: 20px; background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border); }
+        .socials { margin-top: 25px; font-size: 24px; display: flex; justify-content: center; gap: 20px; }
+        .socials a { text-decoration: none; }
     </style>
 </head>
 <body>
 
-    <div id="loader"><div class="spinner"></div></div>
+    <div class="matrix-bg">
+        <span style="animation-duration: 8s;">101101</span>
+        <span style="animation-duration: 5s;">010110</span>
+        <span style="animation-duration: 12s;">111001</span>
+        <span style="animation-duration: 6s;">101010</span>
+        <span style="animation-duration: 10s;">000111</span>
+    </div>
 
     <button id="theme-toggle">🌓 Theme</button>
+    <div id="clock">00:00:00</div>
 
     <div class="card">
-        <img src="https://xsgames.co/randomusers/assets/avatars/male/74.jpg" alt="Shivish Dharma" class="profile-img">
+        <img src="https://xsgames.co/randomusers/assets/avatars/male/74.jpg" alt="Profile" class="profile-img">
         <h1>Shivish Dharma</h1>
         <div class="role">Full Stack Developer</div>
 
-        <div class="section-title">Technical Skills</div>
-        <p style="font-size: 13px; text-align: left; margin-bottom: 20px; color: var(--text-dim);">
-            Python • JavaScript • HTML5 • CSS3 • Git/GitHub
-        </p>
+        <div class="section-title">Expertise</div>
+        <div class="skill-bar">
+            <div class="skill-info"><span>Python</span><span>85%</span></div>
+            <div class="bar-bg"><div class="bar-fill" style="width: 85%;"></div></div>
+        </div>
+        <div class="skill-bar">
+            <div class="skill-info"><span>UI/UX Design</span><span>90%</span></div>
+            <div class="bar-bg"><div class="bar-fill" style="width: 90%;"></div></div>
+        </div>
 
-        <div class="section-title">Get In Touch</div>
+        <div class="section-title">Send a Message</div>
         <form action="https://formspree.io/f/shivishdharma@gmail.com" method="POST">
-            <input type="text" name="name" placeholder="Name" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <textarea name="message" placeholder="Your message..."></textarea>
+            <input type="text" name="name" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+            <textarea name="message" placeholder="What's on your mind?"></textarea>
             <button type="submit" class="btn">🚀 Send Message</button>
         </form>
 
-        <p style="margin-top: 30px; font-size: 10px; opacity: 0.5;">© 2025 SHIVISH DHARMA</p>
+        <div class="socials">
+            <a href="#">🐙</a> <a href="#">💼</a> <a href="#">🐦</a>
+        </div>
+        
+        <p style="margin-top: 25px; font-size: 10px; color: var(--dim);">© 2025 SHIVISH DHARMA</p>
     </div>
 
     <script>
-        // Loader timeout
-        window.addEventListener('load', () => {
-            const loader = document.getElementById('loader');
-            loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 500);
-        });
+        // Clock Logic
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+        }, 1000);
 
         // Theme Toggle
         document.getElementById('theme-toggle').addEventListener('click', () => {
             const doc = document.documentElement;
-            doc.setAttribute('data-theme', doc.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+            const isLight = doc.getAttribute('data-theme') === 'light';
+            doc.setAttribute('data-theme', isLight ? 'dark' : 'light');
         });
     </script>
 </body>
