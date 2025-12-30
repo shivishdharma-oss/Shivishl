@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shivish Dharma | Official</title>
+    <title>dharmendiran.ar | Portfolio</title>
     <style>
         /* COLOR VARIABLES */
         :root {
@@ -39,7 +39,7 @@
             padding: 40px 20px;
         }
 
-        /* PURE CSS MATRIX BACKGROUND */
+        /* MATRIX BACKGROUND */
         .matrix-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -59,10 +59,6 @@
             100% { transform: translateY(100vh); }
         }
 
-        /* NAVIGATION & UI */
-        #theme-toggle { position: fixed; top: 20px; left: 20px; cursor: pointer; padding: 10px 15px; border-radius: 20px; border: 1px solid var(--border); background: var(--card); color: var(--text); z-index: 100; }
-        #clock { position: fixed; top: 20px; right: 20px; font-family: monospace; color: var(--accent); background: var(--card); padding: 5px 10px; border-radius: 5px; border: 1px solid var(--border); }
-
         /* THE CARD */
         .card {
             background: var(--card);
@@ -77,7 +73,23 @@
         }
 
         .profile-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--accent); margin-bottom: 15px; }
-        h1 { font-size: 32px; margin-bottom: 5px; }
+
+        /* TYPEWRITER EFFECT */
+        .typewriter {
+            font-size: 28px;
+            margin-bottom: 5px;
+            overflow: hidden; 
+            border-right: .15em solid var(--accent); 
+            white-space: nowrap; 
+            margin: 0 auto;
+            width: fit-content;
+            letter-spacing: .05em;
+            animation: typing 2.5s steps(20, end), blink-caret .75s step-end infinite;
+        }
+
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--accent); } }
+
         .role { color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 25px; letter-spacing: 2px; }
 
         .section-title { font-size: 13px; text-align: left; margin: 25px 0 12px; color: var(--dim); text-transform: uppercase; font-weight: 800; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
@@ -88,19 +100,16 @@
         .bar-bg { background: var(--bar); height: 8px; border-radius: 10px; overflow: hidden; }
         .bar-fill { background: var(--accent); height: 100%; border-radius: 10px; }
 
-        /* CONTACT FORM */
-        input, textarea {
-            width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px;
-            border: 1px solid var(--border); background: rgba(0,0,0,0.1); color: var(--text);
-        }
         .btn {
             width: 100%; padding: 14px; background: var(--accent); color: white;
             border: none; border-radius: 12px; font-weight: 700; cursor: pointer;
+            margin-top: 15px;
         }
         .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-        .socials { margin-top: 25px; font-size: 24px; display: flex; justify-content: center; gap: 20px; }
-        .socials a { text-decoration: none; }
+        #theme-toggle { position: fixed; top: 20px; left: 20px; cursor: pointer; padding: 8px 15px; border-radius: 20px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 12px; }
+        #clock { position: fixed; top: 20px; right: 20px; font-family: monospace; color: var(--accent); font-size: 12px; }
+
     </style>
 </head>
 <body>
@@ -110,7 +119,6 @@
         <span style="animation-duration: 5s;">010110</span>
         <span style="animation-duration: 12s;">111001</span>
         <span style="animation-duration: 6s;">101010</span>
-        <span style="animation-duration: 10s;">000111</span>
     </div>
 
     <button id="theme-toggle">🌓 Theme</button>
@@ -118,36 +126,27 @@
 
     <div class="card">
         <img src="https://xsgames.co/randomusers/assets/avatars/male/74.jpg" alt="Profile" class="profile-img">
-        <h1>Shivish Dharma</h1>
+        <h1 class="typewriter">dharmendiran.ar</h1>
         <div class="role">Full Stack Developer</div>
 
-        <div class="section-title">Expertise</div>
+        <div class="section-title">Core Skills</div>
         <div class="skill-bar">
-            <div class="skill-info"><span>Python</span><span>85%</span></div>
+            <div class="skill-info"><span>Python & AI</span><span>85%</span></div>
             <div class="bar-bg"><div class="bar-fill" style="width: 85%;"></div></div>
         </div>
         <div class="skill-bar">
-            <div class="skill-info"><span>UI/UX Design</span><span>90%</span></div>
-            <div class="bar-bg"><div class="bar-fill" style="width: 90%;"></div></div>
+            <div class="skill-info"><span>Web Development</span><span>95%</span></div>
+            <div class="bar-bg"><div class="bar-fill" style="width: 95%;"></div></div>
         </div>
 
-        <div class="section-title">Send a Message</div>
-        <form action="https://formspree.io/f/shivishdharma@gmail.com" method="POST">
-            <input type="text" name="name" placeholder="Full Name" required>
-            <input type="email" name="email" placeholder="Email Address" required>
-            <textarea name="message" placeholder="What's on your mind?"></textarea>
-            <button type="submit" class="btn">🚀 Send Message</button>
-        </form>
-
-        <div class="socials">
-            <a href="#">🐙</a> <a href="#">💼</a> <a href="#">🐦</a>
-        </div>
+        <div class="section-title">Connect</div>
+        <button class="btn" id="emailBtn">📧 Copy Email Address</button>
         
-        <p style="margin-top: 25px; font-size: 10px; color: var(--dim);">© 2025 SHIVISH DHARMA</p>
+        <p style="margin-top: 25px; font-size: 10px; color: var(--dim);">© 2025 DHARMENDIRAN.AR</p>
     </div>
 
     <script>
-        // Clock Logic
+        // Clock
         setInterval(() => {
             document.getElementById('clock').innerText = new Date().toLocaleTimeString();
         }, 1000);
@@ -155,8 +154,14 @@
         // Theme Toggle
         document.getElementById('theme-toggle').addEventListener('click', () => {
             const doc = document.documentElement;
-            const isLight = doc.getAttribute('data-theme') === 'light';
-            doc.setAttribute('data-theme', isLight ? 'dark' : 'light');
+            doc.setAttribute('data-theme', doc.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+        });
+
+        // Email Copy
+        document.getElementById('emailBtn').addEventListener('click', function() {
+            navigator.clipboard.writeText("shivishdharma@gmail.com");
+            this.innerText = "🎉 Copied!";
+            setTimeout(() => { this.innerText = "📧 Copy Email Address"; }, 2000);
         });
     </script>
 </body>
