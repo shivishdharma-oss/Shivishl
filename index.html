@@ -1,100 +1,161 @@
-<script>
-    let currentMember = "Dharmendiran";
-    let familyData = {
-        "Dharmendiran": { cal: 0, sugar: 0, pro: 0, history: [] },
-        "Father": { cal: 0, sugar: 0, pro: 0, history: [] },
-        "Mother": { cal: 0, sugar: 0, pro: 0, history: [] }
-    };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHER_HEALTH // Dharmendiran.ar</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap');
+        :root { --safe-green: #00ff88; --alert-red: #ff4444; --neon-cyan: #00f3ff; --bg-dark: #050505; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg-dark); color: white; font-family: 'JetBrains Mono', monospace; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .bg-grid { position: fixed; width: 200%; height: 200%; background-image: linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg); z-index: -1; top: -50%; }
+        .os-container { width: 95%; max-width: 1100px; height: 85vh; background: rgba(10, 10, 20, 0.95); border: 2px solid var(--neon-cyan); border-radius: 15px; display: grid; grid-template-columns: 250px 1fr; box-shadow: 0 0 30px rgba(0, 243, 255, 0.2); }
+        .family-side { border-right: 1px solid rgba(0, 243, 255, 0.3); padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .member-card { padding: 15px; border: 1px solid #333; border-radius: 8px; cursor: pointer; position: relative; }
+        .member-card.active { border-color: var(--neon-cyan); background: rgba(0, 243, 255, 0.1); }
+        .status-light { width: 8px; height: 8px; border-radius: 50%; position: absolute; right: 10px; top: 18px; background: var(--safe-green); }
+        .main-content { padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+        .alert-banner { padding: 15px; border-radius: 8px; font-weight: bold; text-align: center; display: none; background: rgba(255, 68, 68, 0.2); border: 1px solid var(--alert-red); color: var(--alert-red); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .stat-box { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border-left: 4px solid var(--neon-cyan); }
+        .input-group { background: #111; padding: 20px; border-radius: 10px; display: flex; flex-direction: column; gap: 10px; border: 1px solid #333; }
+        .search-area { display: flex; gap: 10px; }
+        input { flex: 1; background: #000; border: 1px solid var(--neon-cyan); padding: 12px; color: white; border-radius: 5px; outline: none; }
+        button { background: var(--neon-cyan); border: none; padding: 12px 25px; color: black; font-weight: bold; cursor: pointer; border-radius: 5px; font-family: 'Orbitron'; }
+        #searchResult { font-size: 12px; color: #ffcc00; min-height: 20px; font-style: italic; }
+        .history-list { font-size: 11px; color: #666; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="os-container">
+        <div class="family-side">
+            <h3 style="color:var(--neon-cyan); font-family: 'Orbitron'; margin-bottom: 20px; font-size: 14px;">HEALTH_CORE</h3>
+            <div class="member-card active" onclick="selectMember('Dharmendiran', this)">Dharmendiran <div class="status-light" id="light-Dharmendiran"></div></div>
+            <div class="member-card" onclick="selectMember('Father', this)">Father <div class="status-light" id="light-Father"></div></div>
+            <div class="member-card" onclick="selectMember('Mother', this)">Mother <div class="status-light" id="light-Mother"></div></div>
+        </div>
 
-    // THIS IS THE BIG DATABASE - MAKE SURE THIS IS IN YOUR CODE
-    const foodDb = {
-        "idli": { cal: 65, sugar: 1, pro: 2, cat: "South Indian" },
-        "dosa": { cal: 170, sugar: 1, pro: 4, cat: "South Indian" },
-        "vada": { cal: 110, sugar: 0, pro: 3, cat: "South Indian" },
-        "pongal": { cal: 212, sugar: 1, pro: 5, cat: "South Indian" },
-        "biryani": { cal: 480, sugar: 2, pro: 18, cat: "South Indian" },
-        "sambar rice": { cal: 320, sugar: 3, pro: 8, cat: "South Indian" },
-        "curd rice": { cal: 200, sugar: 2, pro: 5, cat: "South Indian" },
-        "parotta": { cal: 260, sugar: 2, pro: 5, cat: "South Indian" },
-        "rasam": { cal: 60, sugar: 1, pro: 1, cat: "South Indian" },
-        "filter coffee": { cal: 85, sugar: 12, pro: 2, cat: "Drink" },
-        "upma": { cal: 190, sugar: 2, pro: 4, cat: "South Indian" },
-        "appam": { cal: 120, sugar: 4, pro: 2, cat: "South Indian" },
-        "pizza": { cal: 280, sugar: 5, pro: 10, cat: "Global" },
-        "burger": { cal: 450, sugar: 8, pro: 15, cat: "Global" },
-        "pasta": { cal: 320, sugar: 5, pro: 10, cat: "Global" },
-        "samosa": { cal: 150, sugar: 1, pro: 3, cat: "Snack" },
-        "soda": { cal: 150, sugar: 39, pro: 0, cat: "Drink" },
-        "gulab jamun": { cal: 150, sugar: 25, pro: 2, cat: "Dessert" },
-        "payasam": { cal: 250, sugar: 30, pro: 4, cat: "Dessert" },
-        "apple": { cal: 52, sugar: 10, pro: 1, cat: "Fruit" },
-        "egg": { cal: 70, sugar: 0, pro: 6, cat: "Protein" },
-        "chicken": { cal: 230, sugar: 0, pro: 25, cat: "Protein" },
-        "banana": { cal: 89, sugar: 12, pro: 1, cat: "Fruit" },
-        "chapati": { cal: 70, sugar: 0, pro: 3, cat: "North Indian" },
-        "dal": { cal: 150, sugar: 1, pro: 7, cat: "North Indian" }
-    };
+        <div class="main-content">
+            <div id="healthAlert" class="alert-banner">SYSTEM ALERT: HIGH SUGAR DETECTED</div>
+            <h1 id="memberName" style="font-family: 'Orbitron';">Profile: Dharmendiran</h1>
+            <p style="font-size: 10px; color: #555;">LEAD DEVELOPER: DHARMENDIRAN.AR</p>
 
-    function checkFood() {
-        const input = document.getElementById('foodSearch').value.toLowerCase().trim();
-        const res = document.getElementById('searchResult');
-        
-        // This checks if the word you typed exists in the big list above
-        if(foodDb[input]) {
-            const item = foodDb[input];
-            res.innerHTML = `MATCH: [${item.cat}] ${input} (Calories: ${item.cal})`;
-            res.style.color = "#00f3ff";
-        } else {
-            res.innerHTML = "Searching database...";
-            res.style.color = "#666";
+            <div class="stats-grid">
+                <div class="stat-box"><p style="font-size: 10px; color: #888;">CALORIES</p><h2 id="calVal">0</h2></div>
+                <div class="stat-box"><p style="font-size: 10px; color: #888;">SUGAR (g)</p><h2 id="sugarVal">0</h2></div>
+                <div class="stat-box"><p style="font-size: 10px; color: #888;">PROTEIN (g)</p><h2 id="proVal">0</h2></div>
+            </div>
+
+            <div class="input-group">
+                <p style="font-size: 11px; color: #555;">DATABASE SEARCH (e.g. Idli, Dosa, Biryani, Pizza, Soda, Chocolate)</p>
+                <div class="search-area">
+                    <input type="text" id="foodSearch" placeholder="Enter dish name..." onkeyup="checkFood()">
+                    <button onclick="addIntake()">LOG DATA</button>
+                </div>
+                <div id="searchResult"></div>
+            </div>
+            <div class="history-list" id="logHistory">Log: System ready for input.</div>
+        </div>
+    </div>
+
+    <script>
+        let currentMember = "Dharmendiran";
+        let familyData = {
+            "Dharmendiran": { cal: 0, sugar: 0, pro: 0, history: [] },
+            "Father": { cal: 0, sugar: 0, pro: 0, history: [] },
+            "Mother": { cal: 0, sugar: 0, pro: 0, history: [] }
+        };
+
+        const foodDb = {
+            // SOUTH INDIAN
+            "idli": { cal: 65, sugar: 1, pro: 2 },
+            "dosa": { cal: 170, sugar: 1, pro: 4 },
+            "masala dosa": { cal: 350, sugar: 3, pro: 5 },
+            "vada": { cal: 110, sugar: 0, pro: 3 },
+            "sambar rice": { cal: 320, sugar: 4, pro: 8 },
+            "curd rice": { cal: 210, sugar: 2, pro: 5 },
+            "biryani": { cal: 480, sugar: 2, pro: 18 },
+            "pongal": { cal: 212, sugar: 1, pro: 5 },
+            "parotta": { cal: 260, sugar: 2, pro: 5 },
+            "salna": { cal: 120, sugar: 2, pro: 4 },
+            "rasam": { cal: 60, sugar: 1, pro: 1 },
+            "filter coffee": { cal: 80, sugar: 12, pro: 2 },
+            "payasam": { cal: 250, sugar: 32, pro: 4 },
+            
+            // GLOBAL & SNACKS
+            "pizza": { cal: 285, sugar: 5, pro: 11 },
+            "burger": { cal: 450, sugar: 9, pro: 18 },
+            "soda": { cal: 150, sugar: 39, pro: 0 },
+            "chocolate": { cal: 540, sugar: 48, pro: 5 },
+            "apple": { cal: 52, sugar: 10, pro: 1 },
+            "banana": { cal: 89, sugar: 12, pro: 1 },
+            "samosa": { cal: 150, sugar: 1, pro: 3 },
+            "donut": { cal: 250, sugar: 25, pro: 2 },
+            "chicken curry": { cal: 240, sugar: 1, pro: 25 }
+        };
+
+        function checkFood() {
+            let input = document.getElementById('foodSearch').value.toLowerCase().trim();
+            let res = document.getElementById('searchResult');
+            // Logic to find matches
+            let match = Object.keys(foodDb).find(key => key.includes(input) && input.length > 1);
+            if(match) {
+                res.innerHTML = `Identified: ${match} (${foodDb[match].cal} Calories)`;
+                res.style.color = "var(--neon-cyan)";
+            } else { res.innerText = ""; }
         }
-    }
 
-    function addIntake() {
-        const field = document.getElementById('foodSearch');
-        const food = field.value.toLowerCase().trim();
-        
-        if(foodDb[food]) {
-            const item = foodDb[food];
-            const m = familyData[currentMember];
+        function addIntake() {
+            let inputField = document.getElementById('foodSearch');
+            let input = inputField.value.toLowerCase().trim();
+            // Find best match in database
+            let match = Object.keys(foodDb).find(key => key.includes(input) && input.length > 1);
             
-            m.cal += item.cal;
-            m.sugar += item.sugar;
-            m.pro += item.pro;
-            m.history.unshift(`${new Date().toLocaleTimeString()} - ${food} (+${item.sugar}g sugar)`);
-            
+            if(match) {
+                const item = foodDb[match];
+                const m = familyData[currentMember];
+                m.cal += item.cal;
+                m.sugar += item.sugar;
+                m.pro += item.pro;
+                m.history.unshift(`${new Date().toLocaleTimeString()} - ${match} (+${item.sugar}g sugar)`);
+                
+                updateUI();
+                inputField.value = "";
+                document.getElementById('searchResult').innerText = "";
+            } else {
+                alert("Please type a valid dish from the database (e.g. Biryani, Idli, Soda)");
+            }
+        }
+
+        function selectMember(name, el) {
+            currentMember = name;
+            document.getElementById('memberName').innerText = "Profile: " + name;
+            document.querySelectorAll('.member-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
             updateUI();
-            field.value = "";
-            document.getElementById('searchResult').innerText = "";
-        } else {
-            alert("Food not found! Try typing 'biryani' or 'idli'.");
         }
-    }
 
-    function selectMember(name, el) {
-        currentMember = name;
-        document.getElementById('memberName').innerText = "Profile: " + name;
-        document.querySelectorAll('.member-card').forEach(c => c.classList.remove('active'));
-        el.classList.add('active');
-        updateUI();
-    }
+        function updateUI() {
+            const m = familyData[currentMember];
+            document.getElementById('calVal').innerText = m.cal;
+            document.getElementById('sugarVal').innerText = m.sugar;
+            document.getElementById('proVal').innerText = m.pro;
+            document.getElementById('logHistory').innerHTML = m.history.join("<br>");
 
-    function updateUI() {
-        const m = familyData[currentMember];
-        document.getElementById('calVal').innerText = m.cal;
-        document.getElementById('sugarVal').innerText = m.sugar;
-        document.getElementById('proVal').innerText = m.pro;
-        document.getElementById('logHistory').innerHTML = m.history.join("<br>");
+            const alertBanner = document.getElementById('healthAlert');
+            const light = document.getElementById(`light-${currentMember}`);
 
-        const alertBanner = document.getElementById('healthAlert');
-        const light = document.getElementById(`light-${currentMember}`);
-
-        if (m.sugar > 40) {
-            alertBanner.style.display = 'block';
-            if(light) light.style.background = '#ff4444';
-        } else {
-            alertBanner.style.display = 'none';
-            if(light) light.style.background = '#00ff88';
+            if (m.sugar > 40) {
+                alertBanner.style.display = 'block';
+                if(light) light.style.background = 'var(--alert-red)';
+            } else {
+                alertBanner.style.display = 'none';
+                if(light) light.style.background = 'var(--safe-green)';
+            }
         }
-    }
-</script>
+    </script>
+</body>
+</html>
