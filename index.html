@@ -3,173 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aether AI | Prototype by dharmendiran.ar</title>
+    <title>AETHER_OS // Prototype V3</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap');
+
         :root {
-            --bg: #030712;
-            --panel: rgba(17, 24, 39, 0.7);
-            --accent: #8b5cf6; /* Purple AI Theme */
-            --accent-glow: rgba(139, 92, 246, 0.3);
-            --text: #f3f4f6;
-            --border: rgba(255, 255, 255, 0.1);
+            --neon-cyan: #00f3ff;
+            --neon-purple: #bc13fe;
+            --bg-dark: #050505;
+            --panel-glass: rgba(20, 20, 20, 0.85);
+            --border-glow: rgba(0, 243, 255, 0.3);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--bg);
-            background-image: 
-                radial-gradient(at 0% 0%, var(--accent-glow) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.1) 0px, transparent 50%);
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: var(--text);
             overflow: hidden;
         }
 
-        /* MAIN CONTAINER */
-        .dashboard {
-            width: 90%;
-            max-width: 1000px;
-            height: 80vh;
-            background: var(--panel);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            border: 1px solid var(--border);
+        /* ANIMATED NEON BACKGROUND */
+        .bg-grid {
+            position: fixed;
+            width: 200%; height: 200%;
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(500px) rotateX(60deg);
+            animation: moveGrid 20s linear infinite;
+            z-index: -1;
+            top: -50%;
+        }
+        @keyframes moveGrid { from { transform: perspective(500px) rotateX(60deg) translateY(0); } to { transform: perspective(500px) rotateX(60deg) translateY(50px); } }
+
+        /* THE OS FRAME */
+        .os-container {
+            width: 95%; max-width: 1200px; height: 85vh;
+            background: var(--panel-glass);
+            border: 2px solid var(--border-glow);
+            border-radius: 10px;
             display: grid;
-            grid-template-columns: 250px 1fr;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            grid-template-columns: 80px 1fr 300px;
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.1);
+            position: relative;
         }
 
-        /* SIDEBAR */
-        .sidebar {
-            border-right: 1px solid var(--border);
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .logo { font-weight: 800; font-size: 20px; color: var(--accent); letter-spacing: 1px; }
-
-        .nav-item {
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: 0.3s;
-            color: #9ca3af;
-        }
-        .nav-item.active { background: var(--accent); color: white; }
-        .nav-item:hover:not(.active) { background: rgba(255,255,255,0.05); }
-
-        /* MAIN CONTENT */
-        .main-content {
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
+        /* LEFT MINIMAL NAV */
+        .nav-side {
+            border-right: 1px solid var(--border-glow);
+            display: flex; flex-direction: column; align-items: center; padding: 20px 0;
             gap: 30px;
-            overflow-y: auto;
+        }
+        .nav-icon { width: 40px; height: 40px; border: 1px solid var(--border-glow); border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: 0.3s; }
+        .nav-icon:hover { background: var(--neon-cyan); color: black; box-shadow: 0 0 15px var(--neon-cyan); }
+
+        /* MAIN MONITOR area */
+        .monitor { padding: 40px; display: flex; flex-direction: column; gap: 20px; }
+        .glitch-title { font-family: 'Orbitron', sans-serif; font-size: 3rem; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 5px; }
+        
+        /* DATA CARDS */
+        .data-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .data-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-glow);
+            padding: 20px; border-radius: 4px; position: relative;
+            overflow: hidden;
+        }
+        .data-card::before { content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--neon-cyan); }
+
+        /* TERMINAL LOG */
+        .terminal {
+            background: rgba(0,0,0,0.5); border: 1px solid var(--border-glow);
+            padding: 15px; font-size: 11px; height: 150px; overflow-y: hidden;
+            color: #0f0; margin-top: auto;
         }
 
-        .header h1 { font-size: 32px; margin-bottom: 5px; }
-        .header p { color: #9ca3af; }
-
-        /* TASK CARDS */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
+        /* RIGHT PANEL: AI CORE */
+        .ai-core {
+            background: rgba(188, 19, 254, 0.05);
+            border-left: 1px solid var(--border-glow);
+            padding: 20px; display: flex; flex-direction: column; align-items: center;
         }
-        .card h3 { font-size: 16px; margin-bottom: 10px; color: var(--accent); }
-        .card p { font-size: 13px; color: #cbd5e1; line-height: 1.5; }
-
-        /* PROTOTYPE CHAT BOX */
-        .chat-container {
-            margin-top: auto;
-            background: rgba(0,0,0,0.2);
-            border-radius: 12px;
-            padding: 15px;
-            border: 1px solid var(--border);
+        .core-sphere {
+            width: 150px; height: 150px; border-radius: 50%;
+            background: radial-gradient(circle, var(--neon-purple) 0%, transparent 70%);
+            box-shadow: 0 0 30px var(--neon-purple);
+            animation: pulse 2s infinite ease-in-out;
+            margin: 40px 0;
         }
-        .chat-input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: white;
-            outline: none;
-            padding: 5px;
-            font-size: 14px;
-        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
 
-        /* LIVE ELEMENTS */
-        #clock { font-family: monospace; color: var(--accent); margin-top: auto; font-size: 14px; }
+        .input-box {
+            width: 100%; background: transparent; border: 1px solid var(--neon-purple);
+            padding: 12px; color: white; outline: none; margin-top: auto;
+            font-family: inherit;
+        }
     </style>
 </head>
 <body>
 
-    <div class="dashboard">
-        <aside class="sidebar">
-            <div class="logo">AETHER AI</div>
-            <div class="nav-item active">🏠 Dashboard</div>
-            <div class="nav-item">📅 Schedule</div>
-            <div class="nav-item">⚙️ Settings</div>
+    <div class="bg-grid"></div>
+
+    <div class="os-container">
+        <nav class="nav-side">
+            <div class="nav-icon">◈</div>
+            <div class="nav-icon">⚙</div>
+            <div class="nav-icon">⚡</div>
+            <div class="nav-icon" style="margin-top: auto;">✕</div>
+        </nav>
+
+        <main class="monitor">
+            <div class="status-bar" style="font-size: 10px; color: var(--neon-cyan);">SYSTEM_STATUS: ACTIVE // USER: DHARMENDIRAN.AR</div>
+            <h1 class="glitch-title">AETHER_AI</h1>
             
-            <div id="clock">00:00:00</div>
-            <div style="font-size: 10px; color: #4b5563;">Authored by dharmendiran.ar</div>
-        </aside>
-
-        <main class="main-content">
-            <header class="header">
-                <h1 id="greeting">Good Morning</h1>
-                <p>Gemini has analyzed your schedule for today.</p>
-            </header>
-
-            <div class="grid">
-                <div class="card">
-                    <h3>Focus Mode</h3>
-                    <p>AI suggests 9:00 AM - 11:00 AM for deep coding. Notifications will be muted.</p>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h4 style="color: var(--neon-cyan)">NEURAL ANALYTICS</h4>
+                    <p style="font-size: 12px; opacity: 0.7;">Processing global data streams... 98.4% Accuracy.</p>
                 </div>
-                <div class="card">
-                    <h3>Smart Summary</h3>
-                    <p>You have 3 meetings today. Gemini has prepared brief talking points for each.</p>
+                <div class="data-card">
+                    <h4 style="color: var(--neon-cyan)">TASK OPTIMIZATION</h4>
+                    <p style="font-size: 12px; opacity: 0.7;">Assignment protocol initiated. Prototype deployment ready.</p>
                 </div>
             </div>
 
-            <section class="chat-container">
-                <div style="font-size: 12px; color: var(--accent); margin-bottom: 10px; font-weight: bold;">Ask Aether AI...</div>
-                <input type="text" class="chat-input" id="aiInput" placeholder="How can I help you complete your assignment?">
-            </section>
+            <div class="terminal" id="term">
+                > Initializing Gemini Core...<br>
+                > Loading Neural Framework...<br>
+                > Bypassing Standard UI...<br>
+                > Encrypting User Data...<br>
+                > CONNECTION ESTABLISHED.
+            </div>
         </main>
+
+        <aside class="ai-core">
+            <div style="font-size: 12px; letter-spacing: 2px;">GEMINI_CORE_V4</div>
+            <div class="core-sphere"></div>
+            <p style="text-align: center; font-size: 12px; opacity: 0.8;">The AI is listening to your commands.</p>
+            <input type="text" class="input-box" id="aiCmd" placeholder="Enter System Command...">
+        </aside>
     </div>
 
     <script>
-        // 1. LIVE CLOCK
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString();
-            
-            // 2. DYNAMIC GREETING
-            const hour = now.getHours();
-            const greeting = document.getElementById('greeting');
-            if (hour < 12) greeting.innerText = "Good Morning, Dharmendra";
-            else if (hour < 18) greeting.innerText = "Good Afternoon, Dharmendra";
-            else greeting.innerText = "Good Evening, Dharmendra";
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
+        // TERMINAL AUTO-SCROLL LOGIC
+        const terminal = document.getElementById('term');
+        const logs = [
+            "> Scanning network traffic...",
+            "> Optimizing database clusters...",
+            "> Gemini responding to queries...",
+            "> System efficiency at maximum...",
+            "> AI Prototype active and stable."
+        ];
+        
+        setInterval(() => {
+            const newLog = document.createElement('div');
+            newLog.innerHTML = logs[Math.floor(Math.random() * logs.length)];
+            terminal.appendChild(newLog);
+            if (terminal.childNodes.length > 10) terminal.removeChild(terminal.firstChild);
+        }, 3000);
 
-        // 3. INTERACTIVE CHAT PROTOTYPE
-        const aiInput = document.getElementById('aiInput');
-        aiInput.addEventListener('keypress', function (e) {
+        // INPUT FEEDBACK
+        document.getElementById('aiCmd').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                const val = aiInput.value;
-                aiInput.value = "";
-                alert("Prototype Response: Gemini is processing your request: '" + val + "'");
+                const cmd = this.value;
+                this.value = "";
+                const log = document.createElement('div');
+                log.style.color = 'var(--neon-cyan)';
+                log.innerHTML = "> CMD_EXECUTE: " + cmd;
+                terminal.appendChild(log);
             }
         });
     </script>
