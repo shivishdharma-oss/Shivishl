@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AETHER_HEALTH // Dharmendiran</title>
+    <title>AETHER_HEALTH // Dharmendiran.ar</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap');
         
@@ -11,149 +11,186 @@
             --safe-green: #00ff88; 
             --alert-red: #ff4444; 
             --neon-cyan: #00f3ff; 
+            --neon-purple: #bc13fe;
             --bg-dark: #050505; 
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--bg-dark); color: white; font-family: 'JetBrains Mono', monospace; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
+        /* BACKGROUND GRID */
+        .bg-grid { position: fixed; width: 200%; height: 200%; background-image: linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg); z-index: -1; top: -50%; }
+
         .os-container { width: 95%; max-width: 1100px; height: 85vh; background: rgba(10, 10, 20, 0.95); border: 2px solid var(--neon-cyan); border-radius: 15px; display: grid; grid-template-columns: 250px 1fr; box-shadow: 0 0 30px rgba(0, 243, 255, 0.2); }
 
-        /* LEFT PANEL: FAMILY MEMBERS */
+        /* SIDEBAR */
         .family-side { border-right: 1px solid rgba(0, 243, 255, 0.3); padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .member-card { padding: 15px; border: 1px solid #333; border-radius: 8px; cursor: pointer; transition: 0.3s; }
-        .member-card:hover, .member-card.active { border-color: var(--neon-cyan); background: rgba(0, 243, 255, 0.1); }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 10px; }
+        .member-card { padding: 15px; border: 1px solid #333; border-radius: 8px; cursor: pointer; transition: 0.3s; position: relative; }
+        .member-card.active { border-color: var(--neon-cyan); background: rgba(0, 243, 255, 0.1); box-shadow: 0 0 15px rgba(0, 243, 255, 0.1); }
+        .status-light { width: 8px; height: 8px; border-radius: 50%; position: absolute; right: 10px; top: 10px; background: var(--safe-green); }
 
         /* MAIN CONTENT */
         .main-content { padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+        
+        .alert-banner { padding: 15px; border-radius: 8px; font-weight: bold; text-align: center; display: none; margin-bottom: 10px; background: rgba(255, 68, 68, 0.2); border: 1px solid var(--alert-red); color: var(--alert-red); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .stat-box { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border-left: 4px solid var(--neon-cyan); }
-        
-        /* ALERT BOX */
-        .alert-banner { padding: 15px; border-radius: 8px; font-weight: bold; text-align: center; display: none; }
-        .alert-danger { display: block; background: rgba(255, 68, 68, 0.2); border: 1px solid var(--alert-red); color: var(--alert-red); animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0.6; } }
+        .stat-box h2 { font-family: 'Orbitron'; color: var(--neon-cyan); }
 
         /* INPUT AREA */
-        .input-group { background: #111; padding: 20px; border-radius: 10px; display: flex; gap: 10px; border: 1px solid #333; }
-        input, select { background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 5px; outline: none; }
-        button { background: var(--neon-cyan); border: none; padding: 10px 20px; color: black; font-weight: bold; cursor: pointer; border-radius: 5px; font-family: 'Orbitron'; }
+        .input-group { background: #111; padding: 20px; border-radius: 10px; display: flex; flex-direction: column; gap: 15px; border: 1px solid #333; }
+        .search-area { display: flex; gap: 10px; }
+        input { flex: 1; background: #000; border: 1px solid #444; color: white; padding: 12px; border-radius: 5px; outline: none; font-family: inherit; }
+        button { background: var(--neon-cyan); border: none; padding: 12px 25px; color: black; font-weight: bold; cursor: pointer; border-radius: 5px; font-family: 'Orbitron'; transition: 0.3s; }
+        button:hover { background: white; box-shadow: 0 0 15px white; }
+
+        #searchResult { font-size: 12px; color: #ffcc00; min-height: 20px; }
+        .history-list { font-size: 11px; color: #888; margin-top: 10px; max-height: 100px; overflow-y: auto; }
     </style>
 </head>
 <body>
 
+    <div class="bg-grid"></div>
+
     <div class="os-container">
         <div class="family-side">
-            <h3 style="color:var(--neon-cyan); font-family: 'Orbitron'; margin-bottom: 20px;">FAMILY UNIT</h3>
-            <div class="member-card active" onclick="selectMember('Dad')">
-                <span class="status-dot" style="background:var(--safe-green)"></span> Dad
+            <h3 style="color:var(--neon-cyan); font-family: 'Orbitron'; margin-bottom: 20px; font-size: 14px;">FAMILY TRACKER</h3>
+            <div class="member-card active" onclick="selectMember('Dharmendiran', this)">
+                Dharmendiran <div class="status-light" id="light-Dharmendiran"></div>
             </div>
-            <div class="member-card" onclick="selectMember('Mom')">
-                <span class="status-dot" style="background:var(--safe-green)"></span> Mom
+            <div class="member-card" onclick="selectMember('Father', this)">
+                Father <div class="status-light" id="light-Father"></div>
             </div>
-            <div class="member-card" onclick="selectMember('Kid 1')">
-                <span class="status-dot" id="kid-status" style="background:var(--safe-green)"></span> Kid 1
+            <div class="member-card" onclick="selectMember('Mother', this)">
+                Mother <div class="status-light" id="light-Mother"></div>
             </div>
+            <div style="margin-top: auto; font-size: 10px; color: #555;">SYSTEM V4.0 // 2025</div>
         </div>
 
         <div class="main-content">
-            <div id="healthAlert" class="alert-banner alert-danger">ALERT: SUGAR LIMIT EXCEEDED</div>
+            <div id="healthAlert" class="alert-banner">CRITICAL ALERT: NUTRITIONAL LIMIT EXCEEDED</div>
             
-            <h1 id="memberName" style="font-family: 'Orbitron';">Profile: Dad</h1>
-            <p style="font-size: 12px; color: #888;">Lead Developer: Dharmendiran.ar</p>
+            <div>
+                <h1 id="memberName" style="font-family: 'Orbitron'; font-size: 24px;">Profile: Dharmendiran</h1>
+                <p style="font-size: 11px; color: var(--neon-purple); letter-spacing: 1px;">DEVELOPED BY DHARMENDIRAN.AR</p>
+            </div>
 
             <div class="stats-grid">
-                <div class="stat-box">
-                    <p style="font-size: 12px; color: #888;">Calories</p>
-                    <h2 id="calVal">0</h2>
-                </div>
-                <div class="stat-box">
-                    <p style="font-size: 12px; color: #888;">Sugar (g)</p>
-                    <h2 id="sugarVal">0</h2>
-                </div>
-                <div class="stat-box">
-                    <p style="font-size: 12px; color: #888;">Protein (g)</p>
-                    <h2 id="proVal">0</h2>
-                </div>
+                <div class="stat-box"> <p style="font-size: 10px; color: #888;">TOTAL CALORIES</p> <h2 id="calVal">0</h2> </div>
+                <div class="stat-box"> <p style="font-size: 10px; color: #888;">SUGAR INTAKE (g)</p> <h2 id="sugarVal">0</h2> </div>
+                <div class="stat-box"> <p style="font-size: 10px; color: #888;">PROTEIN (g)</p> <h2 id="proVal">0</h2> </div>
             </div>
 
             <div class="input-group">
-                <select id="foodItem">
-                    <option value="apple">Apple (10g sugar)</option>
-                    <option value="soda">Soda (40g sugar)</option>
-                    <option value="chicken">Chicken (0g sugar)</option>
-                    <option value="donut">Donut (25g sugar)</option>
-                </select>
-                <button onclick="addIntake()">LOG INTAKE</button>
-                <button style="background:#444; color:white;" onclick="resetStats()">RESET</button>
+                <p style="font-size: 11px; color: #666;">DATABASE SEARCH (Try: Idli, Biryani, Pizza, Soda, Gulab Jamun)</p>
+                <div class="search-area">
+                    <input type="text" id="foodSearch" placeholder="Enter food name..." onkeyup="checkFood()">
+                    <button onclick="addIntake()">LOG DATA</button>
+                </div>
+                <div id="searchResult"></div>
             </div>
 
-            <div id="history" style="font-size: 13px; color: #aaa; margin-top: 10px;">
-                Intake History: Waiting for data...
+            <div class="history-list" id="logHistory">
+                Log: Waiting for entry...
             </div>
         </div>
     </div>
 
     <script>
-        // DATA OBJECTS
-        let currentMember = "Dad";
+        let currentMember = "Dharmendiran";
         let familyData = {
-            "Dad": { cal: 0, sugar: 0, pro: 0 },
-            "Mom": { cal: 0, sugar: 0, pro: 0 },
-            "Kid 1": { cal: 0, sugar: 0, pro: 0 }
+            "Dharmendiran": { cal: 0, sugar: 0, pro: 0, history: [] },
+            "Father": { cal: 0, sugar: 0, pro: 0, history: [] },
+            "Mother": { cal: 0, sugar: 0, pro: 0, history: [] }
         };
 
+        // MASSIVE WORLD FOOD DATABASE
         const foodDb = {
-            "apple": { cal: 52, sugar: 10, pro: 1 },
-            "soda": { cal: 150, sugar: 40, pro: 0 },
-            "chicken": { cal: 200, sugar: 0, pro: 30 },
-            "donut": { cal: 250, sugar: 25, pro: 2 }
+            // South Indian
+            "idli": { cal: 65, sugar: 1, pro: 2, cat: "Breakfast" },
+            "dosa": { cal: 170, sugar: 1, pro: 4, cat: "Breakfast" },
+            "vada": { cal: 110, sugar: 0, pro: 3, cat: "Snack" },
+            "pongal": { cal: 212, sugar: 1, pro: 5, cat: "Breakfast" },
+            "biryani": { cal: 480, sugar: 2, pro: 18, cat: "Main" },
+            "sambar rice": { cal: 320, sugar: 3, pro: 8, cat: "Main" },
+            "curd rice": { cal: 200, sugar: 2, pro: 5, cat: "Main" },
+            "parotta": { cal: 260, sugar: 2, pro: 5, cat: "Main" },
+            "rasam": { cal: 60, sugar: 1, pro: 1, cat: "Soup" },
+            "filter coffee": { cal: 85, sugar: 12, pro: 2, cat: "Drink" },
+            
+            // Global / North Indian
+            "pizza": { cal: 280, sugar: 5, pro: 10, cat: "Western" },
+            "burger": { cal: 450, sugar: 8, pro: 15, cat: "Western" },
+            "paneer masala": { cal: 350, sugar: 5, pro: 12, cat: "North Indian" },
+            "samosa": { cal: 150, sugar: 1, pro: 3, cat: "Snack" },
+            "soda": { cal: 150, sugar: 39, pro: 0, cat: "Drink" },
+            "gulab jamun": { cal: 150, sugar: 25, pro: 2, cat: "Dessert" },
+            "apple": { cal: 52, sugar: 10, pro: 1, cat: "Fruit" },
+            "egg": { cal: 70, sugar: 0, pro: 6, cat: "Protein" }
         };
 
-        function selectMember(name) {
-            currentMember = name;
-            document.getElementById('memberName').innerText = "Profile: " + name;
-            // Update active state in UI
-            document.querySelectorAll('.member-card').forEach(c => c.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            updateDisplay();
+        function checkFood() {
+            const input = document.getElementById('foodSearch').value.toLowerCase();
+            const res = document.getElementById('searchResult');
+            if(foodDb[input]) {
+                const item = foodDb[input];
+                res.innerHTML = `MATCH FOUND: [${item.cat}] Calories: ${item.cal} | Sugar: ${item.sugar}g`;
+            } else { res.innerText = ""; }
         }
 
         function addIntake() {
-            const food = document.getElementById('foodItem').value;
-            const data = foodDb[food];
-
-            familyData[currentMember].cal += data.cal;
-            familyData[currentMember].sugar += data.sugar;
-            familyData[currentMember].pro += data.pro;
-
-            updateDisplay();
-            checkAlerts();
+            const field = document.getElementById('foodSearch');
+            const food = field.value.toLowerCase();
+            
+            if(foodDb[food]) {
+                const item = foodDb[food];
+                const m = familyData[currentMember];
+                
+                m.cal += item.cal;
+                m.sugar += item.sugar;
+                m.pro += item.pro;
+                m.history.unshift(`${new Date().toLocaleTimeString()} - ${food} (+${item.sugar}g sugar)`);
+                
+                updateUI();
+                field.value = "";
+                document.getElementById('searchResult').innerText = "";
+            } else {
+                alert("Food not in database. For the demo, use 'Idli', 'Biryani', or 'Soda'.");
+            }
         }
 
-        function updateDisplay() {
+        function selectMember(name, el) {
+            currentMember = name;
+            document.getElementById('memberName').innerText = "Profile: " + name;
+            document.querySelectorAll('.member-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            updateUI();
+        }
+
+        function updateUI() {
             const m = familyData[currentMember];
             document.getElementById('calVal').innerText = m.cal;
             document.getElementById('sugarVal').innerText = m.sugar;
             document.getElementById('proVal').innerText = m.pro;
-        }
-
-        function checkAlerts() {
-            const sugar = familyData[currentMember].sugar;
-            const alertBox = document.getElementById('healthAlert');
             
-            if (sugar > 35) {
-                alertBox.style.display = 'block';
-            } else {
-                alertBox.style.display = 'none';
-            }
-        }
+            // Update History
+            document.getElementById('logHistory').innerHTML = m.history.length > 0 ? m.history.join("<br>") : "Log: Waiting for entry...";
 
-        function resetStats() {
-            familyData[currentMember] = { cal: 0, sugar: 0, pro: 0 };
-            updateDisplay();
-            checkAlerts();
+            // Check Alerts (Limit: 40g Sugar)
+            const alertBanner = document.getElementById('healthAlert');
+            const statusLight = document.getElementById(`light-${currentMember}`);
+
+            if (m.sugar > 40) {
+                alertBanner.style.display = 'block';
+                statusLight.style.background = 'var(--alert-red)';
+                statusLight.style.boxShadow = '0 0 10px var(--alert-red)';
+            } else {
+                alertBanner.style.display = 'none';
+                statusLight.style.background = 'var(--safe-green)';
+                statusLight.style.boxShadow = 'none';
+            }
         }
     </script>
 </body>
