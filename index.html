@@ -1,107 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AETHER_OS | AI Prototype</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap');
-
-        :root {
-            --neon-cyan: #00f3ff;
-            --neon-purple: #bc13fe;
-            --bg-dark: #050505;
-            --panel-glass: rgba(15, 15, 25, 0.95);
-            --border-glow: rgba(0, 243, 255, 0.4);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg-dark); color: white; font-family: 'JetBrains Mono', monospace; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-
-        .bg-grid { position: fixed; width: 200%; height: 200%; background-image: linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg); animation: moveGrid 15s linear infinite; z-index: -1; top: -50%; }
-        @keyframes moveGrid { from { transform: translateY(0); } to { transform: translateY(40px); } }
-
-        .os-container { width: 95%; max-width: 1200px; height: 85vh; background: var(--panel-glass); border: 2px solid var(--border-glow); border-radius: 15px; display: grid; grid-template-columns: 80px 1fr 320px; box-shadow: 0 0 50px rgba(0, 243, 255, 0.2); }
-
-        .nav-side { border-right: 1px solid var(--border-glow); display: flex; flex-direction: column; align-items: center; padding: 30px 0; gap: 20px; }
-        .nav-icon { width: 50px; height: 50px; border: 1px solid var(--border-glow); border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--neon-cyan); transition: 0.3s; }
-        .nav-icon.active { background: var(--neon-cyan); color: black; box-shadow: 0 0 20px var(--neon-cyan); }
-
-        .monitor { padding: 40px; display: flex; flex-direction: column; overflow: hidden; }
-        .glitch-title { font-family: 'Orbitron', sans-serif; font-size: 2rem; color: var(--neon-cyan); margin-bottom: 20px; }
-
-        .chat-display { flex-grow: 1; background: rgba(0,0,0,0.4); border: 1px solid var(--border-glow); border-radius: 8px; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .msg { padding: 10px 15px; border-radius: 4px; max-width: 85%; font-size: 13px; }
-        .user-msg { align-self: flex-end; background: var(--neon-cyan); color: black; font-weight: bold; }
-        .ai-msg { align-self: flex-start; border: 1px solid var(--neon-purple); background: rgba(188, 19, 254, 0.1); color: #e0a7ff; }
-
-        .ai-panel { border-left: 1px solid var(--border-glow); padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .core-sphere { width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, var(--neon-purple) 0%, transparent 75%); box-shadow: 0 0 30px var(--neon-purple); animation: pulse 2s infinite ease-in-out; margin: 30px 0; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-
-        .input-box { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-purple); padding: 14px; color: white; outline: none; border-radius: 4px; font-family: inherit; }
-    </style>
-</head>
-<body>
-
-<div class="bg-grid"></div>
-
-<div class="os-container">
-    <nav class="nav-side">
-        <div class="nav-icon active">◈</div>
-        <div class="nav-icon">📊</div>
-        <div class="nav-icon">🛡</div>
-    </nav>
-
-    <main class="monitor">
-        <h1 class="glitch-title">AETHER_AI</h1>
-        <div class="chat-display" id="chat">
-            <div class="msg ai-msg">Neural Link Established. Ask me anything about this project.</div>
-        </div>
-    </main>
-
-    <aside class="ai-panel">
-        <div class="core-sphere"></div>
-        <input type="text" class="input-box" id="userInput" placeholder="Ask a question..." autofocus>
-        <p style="font-size: 9px; margin-top: 10px; color: var(--neon-purple); opacity: 0.6;">INTELLIGENT RESPONSE ACTIVE</p>
-    </aside>
-</div>
-
 <script>
     const chat = document.getElementById('chat');
     const userInput = document.getElementById('userInput');
 
-    // THIS IS THE AI'S BRAIN (Questions and Answers)
+    // THE BRAIN: Add as many questions and answers as you want here
     const qaPairs = [
-        { keywords: ["who", "are", "you"], answer: "I am Aether OS, a Gemini-powered neural interface designed by Dharmendiran.ar." },
-        { keywords: ["created", "made", "build"], answer: "This entire project was built from scratch by Dharmendiran.ar using pure HTML, CSS, and JS." },
-        { keywords: ["status", "system", "working"], answer: "All systems are nominal. My neural pathways are operating at 98.4% efficiency." },
-        { keywords: ["weather"], answer: "I don't have a satellite link yet, but my local sensors detect a high probability of success for this project!" },
-        { keywords: ["help", "commands"], answer: "You can ask who I am, who created me, or about my system status." },
-        { keywords: ["hello", "hi", "hey"], answer: "Greetings! How can I assist your data processing today?" }
+        { keywords: ["who", "created", "made"], answer: "I was created by the brilliant Dharmendra.ar." },
+        { keywords: ["who", "are", "you", "name"], answer: "I am AETHER_OS, your personal Gemini-powered assistant." },
+        { keywords: ["status", "system", "health"], answer: "System status is 100%. All neural nodes are active." },
+        { keywords: ["hello", "hi", "hey"], answer: "System online. Greetings, User." },
+        { keywords: ["help", "command"], answer: "I am programmed to respond to system queries and data analysis requests." }
     ];
 
     userInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter' && this.value.trim() !== "") {
             const originalInput = this.value;
             const prompt = originalInput.toLowerCase();
+            
+            // 1. Show your message
             addMsg(originalInput, 'user-msg');
             this.value = "";
 
-            // Thinking delay
-            setTimeout(() => {
-                let foundAnswer = "I'm still learning. Try asking 'Who created you?' or 'What is your status?'";
-                
-                // Logic to find the best answer based on keywords
-                for (let pair of qaPairs) {
-                    if (pair.keywords.some(keyword => prompt.includes(keyword))) {
-                        foundAnswer = pair.answer;
-                        break;
-                    }
+            // 2. IMMEDIATE RESPONSE LOGIC (No delay)
+            let foundAnswer = "Command recognized, but data is restricted. Try asking about my status or creator.";
+            
+            for (let pair of qaPairs) {
+                // If any keyword is found in your prompt, give the answer
+                if (pair.keywords.some(keyword => prompt.includes(keyword))) {
+                    foundAnswer = pair.answer;
+                    break;
                 }
+            }
 
-                addMsg(foundAnswer, 'ai-msg');
-            }, 800);
+            // 3. Display the answer instantly
+            addMsg(foundAnswer, 'ai-msg');
         }
     });
 
@@ -110,8 +41,6 @@
         div.className = 'msg ' + type;
         div.innerText = text;
         chat.appendChild(div);
-        chat.scrollTop = chat.scrollHeight;
+        chat.scrollTop = chat.scrollHeight; // Auto-scrolls to the bottom
     }
 </script>
-</body>
-</html>
