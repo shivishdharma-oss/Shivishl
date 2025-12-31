@@ -3,31 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AETHER_OS // Final</title>
+    <title>AETHER_OS // Scroll Fix</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap');
+        
         :root { --neon-cyan: #00f3ff; --neon-purple: #bc13fe; --bg-dark: #050505; }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--bg-dark); color: white; font-family: 'JetBrains Mono', monospace; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         
+        /* GRID BACKGROUND */
         .bg-grid { position: fixed; width: 200%; height: 200%; background-image: linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg); z-index: -1; top: -50%; }
 
-        .os-container { width: 95%; max-width: 1100px; height: 80vh; background: rgba(10, 10, 20, 0.9); border: 2px solid var(--neon-cyan); border-radius: 15px; display: flex; box-shadow: 0 0 30px rgba(0, 243, 255, 0.2); }
+        .os-container { width: 95%; max-width: 1100px; height: 85vh; background: rgba(10, 10, 20, 0.9); border: 2px solid var(--neon-cyan); border-radius: 15px; display: flex; box-shadow: 0 0 30px rgba(0, 243, 255, 0.2); position: relative; }
         
-        .nav-side { width: 70px; border-right: 1px solid rgba(0, 243, 255, 0.3); display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px; }
-        .nav-icon { width: 45px; height: 45px; border: 1px solid var(--neon-cyan); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--neon-cyan); }
-        .nav-icon.active { background: var(--neon-cyan); color: black; }
+        /* SIDEBAR */
+        .nav-side { width: 70px; border-right: 1px solid rgba(0, 243, 255, 0.3); display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px; flex-shrink: 0; }
+        .nav-icon { width: 45px; height: 45px; border: 1px solid var(--neon-cyan); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--neon-cyan); transition: 0.3s; }
+        .nav-icon.active { background: var(--neon-cyan); color: black; box-shadow: 0 0 15px var(--neon-cyan); }
 
-        .main-content { flex: 1; padding: 30px; display: flex; flex-direction: column; }
-        .chat-area { flex: 1; background: rgba(0,0,0,0.5); border-radius: 10px; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; border: 1px solid rgba(0, 243, 255, 0.1); }
+        /* MAIN CONTENT AREA */
+        .main-content { flex: 1; padding: 25px; display: flex; flex-direction: column; min-width: 0; }
         
-        .msg { padding: 10px; border-radius: 5px; max-width: 80%; font-size: 13px; }
-        .user-msg { align-self: flex-end; background: var(--neon-cyan); color: black; }
-        .ai-msg { align-self: flex-start; border: 1px solid var(--neon-purple); color: #e0a7ff; }
+        /* THE CHAT BOX - SCROLL FIXED HERE */
+        .chat-area { 
+            flex: 1; 
+            background: rgba(0,0,0,0.6); 
+            border-radius: 10px; 
+            padding: 20px; 
+            overflow-y: auto; /* This enables the scrollbar */
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: var(--neon-cyan) transparent;
+        }
 
-        .input-area { margin-top: 20px; display: flex; gap: 10px; }
-        input { flex: 1; background: #000; border: 1px solid var(--neon-purple); padding: 12px; color: white; border-radius: 5px; outline: none; }
-        button { background: var(--neon-purple); border: none; padding: 0 20px; color: white; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        /* CUSTOM SCROLLBAR FOR CHROME/EDGE */
+        .chat-area::-webkit-scrollbar { width: 6px; }
+        .chat-area::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 10px; }
+
+        .msg { padding: 12px; border-radius: 8px; max-width: 85%; font-size: 13px; line-height: 1.4; word-wrap: break-word; }
+        .user-msg { align-self: flex-end; background: var(--neon-cyan); color: black; font-weight: bold; border-bottom-right-radius: 2px; }
+        .ai-msg { align-self: flex-start; border: 1px solid var(--neon-purple); color: #e0a7ff; border-bottom-left-radius: 2px; background: rgba(188, 19, 254, 0.05); }
+
+        .input-area { margin-top: 20px; display: flex; gap: 10px; flex-shrink: 0; }
+        input { flex: 1; background: #000; border: 1px solid var(--neon-purple); padding: 14px; color: white; border-radius: 5px; outline: none; font-family: inherit; }
+        button { background: var(--neon-purple); border: none; padding: 0 25px; color: white; cursor: pointer; border-radius: 5px; font-weight: bold; font-family: 'Orbitron'; transition: 0.3s; }
+        button:hover { background: #9d09d6; box-shadow: 0 0 15px var(--neon-purple); }
         
         .tab { display: none; height: 100%; flex-direction: column; }
         .tab.active { display: flex; }
@@ -44,22 +68,25 @@
         </div>
 
         <div class="main-content">
-            <h2 style="color:var(--neon-cyan); margin-bottom:15px; font-family: 'Orbitron';">AETHER_OS</h2>
+            <h2 style="color:var(--neon-cyan); margin-bottom:15px; font-family: 'Orbitron'; letter-spacing: 2px;">AETHER_OS_V4</h2>
             
             <div id="home" class="tab active">
                 <div class="chat-area" id="chat">
-                    <div class="msg ai-msg">System Online. Type a math question (e.g., 5*5) or ask "Who created you?".</div>
+                    <div class="msg ai-msg">Neural core initialized. Ask me multiple questions to test the scrolling! (e.g., math, creator, status).</div>
                 </div>
                 <div class="input-area">
-                    <input type="text" id="userInput" placeholder="Type here..." autocomplete="off">
+                    <input type="text" id="userInput" placeholder="Command input..." autocomplete="off">
                     <button onclick="processInput()">SEND</button>
                 </div>
             </div>
 
             <div id="info" class="tab">
-                <h3 style="color:var(--neon-cyan)">System Analytics</h3>
-                <p style="margin-top:20px;">Processor: Gemini Neural V4</p>
-                <p>Status: Ready</p>
+                <h3 style="color:var(--neon-cyan); font-family: 'Orbitron';">CORE ANALYTICS</h3>
+                <div style="margin-top:20px; padding:15px; border:1px solid var(--neon-cyan); border-radius:5px;">
+                    <p>Uptime: 99.9%</p>
+                    <p>Latency: 0.001ms</p>
+                    <p>User: DHARMENDIRAN.AR</p>
+                </div>
             </div>
         </div>
     </div>
@@ -80,7 +107,12 @@
             div.className = 'msg ' + type;
             div.innerText = text;
             chat.appendChild(div);
-            chat.scrollTop = chat.scrollHeight;
+            
+            // AUTOMATIC SCROLL TO BOTTOM
+            chat.scrollTo({
+                top: chat.scrollHeight,
+                behavior: 'smooth'
+            });
         }
 
         function processInput() {
@@ -93,36 +125,30 @@
             let response = "";
             const lowVal = val.toLowerCase();
 
-            // 1. MATH LOGIC
+            // MATH LOGIC
             const mathPattern = /[0-9+\-*/().\s]{3,}/;
             if (mathPattern.test(val) && /[+\-*/]/.test(val)) {
                 try {
-                    // Extract only math characters to avoid errors
                     const cleanMath = val.replace(/[^0-9+\-*/().]/g, '');
                     response = "Result: " + eval(cleanMath);
-                } catch(e) { response = "Math error. Use numbers and + - * /"; }
+                } catch(e) { response = "Math logic error. Check syntax."; }
             } 
-            // 2. KEYWORDS
+            // KEYWORDS
             else if (lowVal.includes("who") || lowVal.includes("create")) {
-                response = "I was created by Dharmendra.ar.";
+                response = "I was developed by Dharmendra.ar for the 2025 AI showcase.";
             } else if (lowVal.includes("status") || lowVal.includes("system")) {
-                response = "All systems are operational and stable.";
+                response = "Global systems are functional. All data packets are secure.";
             } else if (lowVal.includes("hello") || lowVal.includes("hi")) {
-                response = "Greetings, User. How can I assist?";
+                response = "System ready. Greetings Dharmendra. Waiting for input.";
             } else {
-                response = "I am a prototype. Try asking 'What is 10 + 10?' or 'Who created you?'.";
+                response = "Analysis of '" + val + "' complete. I am currently in prototype mode. Ask me math or about my status.";
             }
 
             // Respond instantly
             addMessage(response, 'ai-msg');
         }
 
-        // Allow Enter key to work
-        input.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                processInput();
-            }
-        });
+        input.addEventListener("keypress", (e) => { if (e.key === "Enter") processInput(); });
     </script>
 </body>
 </html>
