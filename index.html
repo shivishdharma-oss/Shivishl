@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AETHER_OS // Prototype V4</title>
+    <title>AETHER_OS // Neural Prototype</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap');
 
@@ -11,196 +11,143 @@
             --neon-cyan: #00f3ff;
             --neon-purple: #bc13fe;
             --bg-dark: #050505;
-            --panel-glass: rgba(20, 20, 20, 0.9);
-            --border-glow: rgba(0, 243, 255, 0.3);
+            --panel-glass: rgba(15, 15, 25, 0.95);
+            --border-glow: rgba(0, 243, 255, 0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg-dark); color: white; font-family: 'JetBrains Mono', monospace; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
-        body {
-            background-color: var(--bg-dark);
-            color: white;
-            font-family: 'JetBrains Mono', monospace;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+        /* GRID ANIMATION */
+        .bg-grid { position: fixed; width: 200%; height: 200%; background-image: linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg); animation: moveGrid 15s linear infinite; z-index: -1; top: -50%; }
+        @keyframes moveGrid { from { transform: perspective(500px) rotateX(60deg) translateY(0); } to { transform: perspective(500px) rotateX(60deg) translateY(40px); } }
 
-        /* BACKGROUND GRID */
-        .bg-grid {
-            position: fixed; width: 200%; height: 200%;
-            background-image: linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            transform: perspective(500px) rotateX(60deg);
-            animation: moveGrid 20s linear infinite;
-            z-index: -1; top: -50%;
-        }
-        @keyframes moveGrid { from { transform: perspective(500px) rotateX(60deg) translateY(0); } to { transform: perspective(500px) rotateX(60deg) translateY(50px); } }
+        /* MAIN CONTAINER */
+        .os-container { width: 95%; max-width: 1200px; height: 85vh; background: var(--panel-glass); border: 2px solid var(--border-glow); border-radius: 15px; display: grid; grid-template-columns: 80px 1fr 320px; box-shadow: 0 0 50px rgba(0, 243, 255, 0.2); position: relative; }
 
-        /* OS CONTAINER */
-        .os-container {
-            width: 95%; max-width: 1200px; height: 85vh;
-            background: var(--panel-glass);
-            border: 2px solid var(--border-glow);
-            border-radius: 12px;
-            display: grid;
-            grid-template-columns: 80px 1fr 300px;
-            box-shadow: 0 0 40px rgba(0, 243, 255, 0.15);
-        }
+        /* NAVIGATION */
+        .nav-side { border-right: 1px solid var(--border-glow); display: flex; flex-direction: column; align-items: center; padding: 30px 0; gap: 20px; }
+        .nav-icon { width: 50px; height: 50px; border: 1px solid var(--border-glow); border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: 0.3s; color: var(--neon-cyan); }
+        .nav-icon:hover, .nav-icon.active { background: var(--neon-cyan); color: black; box-shadow: 0 0 20px var(--neon-cyan); }
 
-        /* SIDE NAV */
-        .nav-side {
-            border-right: 1px solid var(--border-glow);
-            display: flex; flex-direction: column; align-items: center; padding: 30px 0; gap: 25px;
-        }
-        .nav-icon {
-            width: 45px; height: 45px; border: 1px solid var(--border-glow);
-            border-radius: 8px; cursor: pointer; display: flex;
-            align-items: center; justify-content: center; font-size: 20px;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: var(--neon-cyan);
-        }
-        .nav-icon:hover, .nav-icon.active {
-            background: var(--neon-cyan); color: black;
-            box-shadow: 0 0 20px var(--neon-cyan);
-            transform: scale(1.1);
-        }
-
-        /* CENTER MONITOR AREA */
-        .monitor { padding: 40px; display: flex; flex-direction: column; }
-        .view-content { flex-grow: 1; display: none; animation: fadeIn 0.5s forwards; }
+        /* CENTER AREA */
+        .monitor { padding: 40px; display: flex; flex-direction: column; position: relative; }
+        .glitch-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; color: var(--neon-cyan); margin-bottom: 20px; text-shadow: 0 0 10px var(--neon-cyan); }
+        .view-content { display: none; animation: fadeIn 0.4s ease; }
         .view-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .glitch-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; color: var(--neon-cyan); margin-bottom: 20px; }
+        /* CHAT BUBBLES */
+        .chat-display { flex-grow: 1; background: rgba(0,0,0,0.4); border: 1px solid var(--border-glow); border-radius: 8px; padding: 20px; overflow-y: auto; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 8px 15px; border-radius: 4px; max-width: 80%; font-size: 13px; line-height: 1.4; }
+        .user-msg { align-self: flex-end; background: var(--neon-cyan); color: black; font-weight: bold; }
+        .ai-msg { align-self: flex-start; border: 1px solid var(--neon-purple); background: rgba(188, 19, 254, 0.1); color: var(--neon-purple); }
 
-        .data-card {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-glow);
-            padding: 20px; border-radius: 8px; margin-bottom: 15px;
-        }
+        /* AI CORE (RIGHT) */
+        .ai-panel { border-left: 1px solid var(--border-glow); padding: 20px; display: flex; flex-direction: column; align-items: center; background: rgba(0,0,0,0.2); }
+        .core-sphere { width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, var(--neon-purple) 0%, transparent 75%); box-shadow: 0 0 30px var(--neon-purple); animation: pulse 2s infinite ease-in-out; margin: 30px 0; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } }
 
-        /* TERMINAL LOG */
-        .terminal {
-            background: rgba(0,0,0,0.6); border: 1px solid var(--border-glow);
-            padding: 15px; font-size: 11px; height: 120px; overflow-y: hidden;
-            color: #0f0; margin-top: 20px; border-radius: 4px;
-        }
+        .input-area { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+        .input-box { background: transparent; border: 1px solid var(--neon-purple); padding: 12px; color: white; outline: none; font-family: inherit; border-radius: 4px; }
+        .status-text { font-size: 10px; color: var(--neon-purple); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* AI CORE PANEL (RIGHT) */
-        .ai-core { border-left: 1px solid var(--border-glow); padding: 25px; text-align: center; display: flex; flex-direction: column; }
-        .core-sphere {
-            width: 140px; height: 140px; border-radius: 50%;
-            background: radial-gradient(circle, var(--neon-purple) 0%, transparent 70%);
-            box-shadow: 0 0 35px var(--neon-purple);
-            animation: pulse 2s infinite ease-in-out;
-            margin: 40px auto;
-        }
-        @keyframes pulse { 0%, 100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.15); filter: brightness(1.4); } }
-
-        .chat-box {
-            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--neon-purple);
-            padding: 12px; color: white; outline: none; margin-top: auto; border-radius: 4px;
-        }
     </style>
 </head>
 <body>
 
-    <div class="bg-grid"></div>
+<div class="bg-grid"></div>
 
-    <div class="os-container">
-        <nav class="nav-side">
-            <div class="nav-icon active" onclick="showView('home', this)" title="Dashboard">◈</div>
-            <div class="nav-icon" onclick="showView('stats', this)" title="Analytics">📈</div>
-            <div class="nav-icon" onclick="showView('shield', this)" title="Security">🛡</div>
-            <div class="nav-icon" onclick="shutdown()" style="margin-top: auto; color: #ff4444;" title="Exit">✕</div>
-        </nav>
+<div class="os-container">
+    <nav class="nav-side">
+        <div class="nav-icon active">◈</div>
+        <div class="nav-icon">📊</div>
+        <div class="nav-icon">🛡</div>
+    </nav>
 
-        <main class="monitor">
-            <div style="font-size: 10px; color: var(--neon-cyan); margin-bottom: 10px;">ID: DHARMENDIRAN_AR // ENCRYPTION: AES-256</div>
+    <main class="monitor">
+        <div style="font-size: 10px; color: var(--neon-cyan); margin-bottom: 10px;">AUTH: DHARMENDIRAN.AR // CORE: GEMINI_V4</div>
+        <h1 class="glitch-title">AETHER_OS</h1>
+
+        <div class="chat-display" id="chat">
+            <div class="msg ai-msg">System Initialized. I am Aether AI. How can I assist you today?</div>
+        </div>
+
+        <div id="terminal" style="font-size: 11px; color: #0f0; opacity: 0.6; height: 40px; overflow: hidden;">
+            > Waiting for user input...
+        </div>
+    </main>
+
+    <aside class="ai-panel">
+        <div class="status-text">Neural Core Active</div>
+        <div class="core-sphere"></div>
+        <div class="input-area">
+            <input type="text" class="input-box" id="userInput" placeholder="Type command here..." autofocus>
+            <p style="font-size: 10px; opacity: 0.5; text-align: center;">Press ENTER to transmit</p>
+        </div>
+    </aside>
+</div>
+
+<script>
+    const chat = document.getElementById('chat');
+    const userInput = document.getElementById('userInput');
+    const terminal = document.getElementById('terminal');
+
+    // 1. AUTO-CORRECT DICTIONARY
+    const corrections = {
+        "hllo": "Hello",
+        "hru": "How are you",
+        "nam": "name",
+        "wat": "What",
+        "thear": "there",
+        "ai": "AI",
+        "cod": "code"
+    };
+
+    // 2. AI RESPONSE LOGIC
+    const responses = {
+        "hello": "Greetings, User. My neural pathways are operating at 98% efficiency. How can I help?",
+        "what is your name": "I am Aether_OS, powered by Gemini AI architecture.",
+        "who created you": "I was developed by Dharmendra.ar as a high-performance AI prototype.",
+        "status": "All systems nominal. Encryption active. Firewall secure.",
+        "help": "Available commands: STATUS, ANALYZE, ENCRYPT, SHUTDOWN.",
+        "default": "Analysis complete. I have processed your input and am ready for the next command."
+    };
+
+    userInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && this.value.trim() !== "") {
+            let rawText = this.value;
             
-            <div id="home" class="view-content active">
-                <h1 class="glitch-title">DASHBOARD_</h1>
-                <div class="data-card">
-                    <h3 style="color: var(--neon-cyan)">GEMINI STATUS: ONLINE</h3>
-                    <p style="opacity: 0.7; font-size: 13px;">AI core is currently synchronizing with global data streams. Ready for instruction.</p>
-                </div>
-                <div class="data-card">
-                    <h3 style="color: var(--neon-cyan)">MISSION_OBJECTIVE</h3>
-                    <p style="opacity: 0.7; font-size: 13px;">Deploy Gemini AI prototype for global competition. Win probability: 99.9%.</p>
-                </div>
-            </div>
+            // SPELL CHECK / AUTO-CORRECT
+            let words = rawText.split(" ");
+            let correctedWords = words.map(word => corrections[word.toLowerCase()] || word);
+            let finalMsg = correctedWords.join(" ");
 
-            <div id="stats" class="view-content">
-                <h1 class="glitch-title">ANALYTICS_</h1>
-                <div class="data-card">
-                    <p>Neural Efficiency: 98.4%</p>
-                    <div style="width: 100%; background: #222; height: 10px; margin-top: 10px;"><div style="width: 98%; background: var(--neon-cyan); height: 100%;"></div></div>
-                </div>
-                <div class="data-card">
-                    <p>Data Processing: 4.2 TB/s</p>
-                    <div style="width: 100%; background: #222; height: 10px; margin-top: 10px;"><div style="width: 75%; background: var(--neon-purple); height: 100%;"></div></div>
-                </div>
-            </div>
+            // DISPLAY USER MSG
+            addMsg(finalMsg, 'user-msg');
+            this.value = "";
 
-            <div id="shield" class="view-content">
-                <h1 class="glitch-title">SECURITY_</h1>
-                <div class="data-card" style="border-color: #ff4444;">
-                    <h3 style="color: #ff4444;">THREAT DETECTION: NONE</h3>
-                    <p style="opacity: 0.7; font-size: 13px;">Firewall active. Deep packet inspection running. All neural paths secured.</p>
-                </div>
-            </div>
+            // TERMINAL LOG
+            terminal.innerHTML = "> ANALYZING INPUT...<br>> AUTO-CORRECT APPLIED: " + (rawText !== finalMsg ? "YES" : "NO");
 
-            <div class="terminal" id="term">> System ready...</div>
-        </main>
-
-        <aside class="ai-core">
-            <div style="font-size: 11px; letter-spacing: 2px; color: var(--neon-purple);">NEURAL_CORE_V4</div>
-            <div class="core-sphere"></div>
-            <p style="font-size: 11px; opacity: 0.6; line-height: 1.6;">Gemini is observing your inputs. All actions are logged.</p>
-            <input type="text" class="chat-box" id="aiInput" placeholder="Enter Command...">
-        </aside>
-    </div>
-
-    <script>
-        // VIEW SWITCHER LOGIC
-        function showView(viewId, element) {
-            // Hide all views
-            document.querySelectorAll('.view-content').forEach(view => view.classList.remove('active'));
-            // Show selected view
-            document.getElementById(viewId).classList.add('active');
-            // Update Icon state
-            document.querySelectorAll('.nav-icon').forEach(icon => icon.classList.remove('active'));
-            element.classList.add('active');
-            // Log to terminal
-            addLog("> Switched to module: " + viewId.toUpperCase());
+            // AI RESPONSE DELAY (Thinking effect)
+            setTimeout(() => {
+                let lowerMsg = finalMsg.toLowerCase();
+                let reply = responses[lowerMsg] || responses["default"];
+                addMsg(reply, 'ai-msg');
+                terminal.innerHTML = "> WAITING FOR USER INPUT...";
+            }, 1000);
         }
+    });
 
-        // TERMINAL LOGIC
-        function addLog(text) {
-            const term = document.getElementById('term');
-            const entry = document.createElement('div');
-            entry.innerText = text;
-            term.appendChild(entry);
-            if (term.childNodes.length > 8) term.removeChild(term.firstChild);
-        }
+    function addMsg(text, type) {
+        const div = document.createElement('div');
+        div.className = 'msg ' + type;
+        div.innerText = text;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight; // Auto-scroll to bottom
+    }
+</script>
 
-        // CHAT INPUT LOGIC
-        document.getElementById('aiInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const val = this.value;
-                addLog("> USER_CMD: " + val);
-                addLog("> GEMINI_AI: Process initiated for '" + val + "'");
-                this.value = "";
-            }
-        });
-
-        function shutdown() {
-            if(confirm("DANGER: Terminate Aether_OS session?")) {
-                document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%; font-family:Orbitron;'>SYSTEM_OFFLINE</h1>";
-            }
-        }
-    </script>
 </body>
 </html>
