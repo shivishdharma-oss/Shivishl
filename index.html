@@ -85,6 +85,7 @@
     const chat = document.getElementById('chat');
     const userInput = document.getElementById('userInput');
 
+    // TAB SWITCHING
     function switchTab(tabId, icon) {
         document.querySelectorAll('.tab-view').forEach(t => t.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
@@ -92,12 +93,20 @@
         icon.classList.add('active');
     }
 
+    // THE EXPANDED BRAIN - Add as many as you want!
     const qaPairs = [
-        { keywords: ["who", "created"], answer: "I was created by Dharmendra.ar." },
-        { keywords: ["name", "who are you"], answer: "I am AETHER_OS, your AI prototype." },
-        { keywords: ["status", "system"], answer: "All systems nominal. Ready for commands." },
-        { keywords: ["time", "date"], answer: "System time is " + new Date().toLocaleTimeString() },
-        { keywords: ["hello", "hi"], answer: "Greetings! How can I help?" }
+        { keywords: ["who", "created", "author"], answer: "I was developed by Dharmendra.ar for the 2025 AI Competition." },
+        { keywords: ["who are you", "name", "identity"], answer: "I am AETHER_OS, a Gemini-integrated neural prototype." },
+        { keywords: ["status", "health", "system"], answer: "All systems nominal. Neural sync is at 98.4%." },
+        { keywords: ["hello", "hi", "hey"], answer: "Greetings! Aether AI is online and ready." },
+        { keywords: ["time", "date", "clock"], answer: "System time: " + new Date().toLocaleTimeString() },
+        { keywords: ["html", "css", "code"], answer: "I am built using pure HTML5 and CSS3 with a JavaScript logic engine." },
+        { keywords: ["gemini", "ai", "model"], answer: "I simulate the Gemini Pro architecture for high-speed local processing." },
+        { keywords: ["skills", "features"], answer: "I feature instant response, keyword detection, and glassmorphism UI." },
+        { keywords: ["weather"], answer: "Sensors indicate optimal conditions for coding and system deployment." },
+        { keywords: ["thank", "thanks"], answer: "You are welcome. Operational efficiency is my priority." },
+        { keywords: ["bye", "exit"], answer: "Session persistence active. Please use the 'X' button if you must leave." },
+        { keywords: ["math", "calculate"], answer: "You can type math problems like 5+5 directly into the prompt!" }
     ];
 
     userInput.addEventListener('keypress', function(e) {
@@ -109,12 +118,12 @@
 
             let foundAnswer = "";
 
-            // Check Math
+            // 1. Math Logic (Check if user typed numbers)
             if (prompt.match(/[0-9]/) && (prompt.includes('+') || prompt.includes('-') || prompt.includes('*'))) {
-                try { foundAnswer = "Result: " + eval(prompt); } catch { foundAnswer = "Invalid math."; }
+                try { foundAnswer = "Result: " + eval(prompt); } catch { foundAnswer = "Math Error."; }
             } 
             
-            // Check Keywords
+            // 2. Keyword Logic (Search the Brain)
             if (!foundAnswer) {
                 for (let pair of qaPairs) {
                     if (pair.keywords.some(k => prompt.includes(k))) {
@@ -124,7 +133,8 @@
                 }
             }
 
-            if (!foundAnswer) foundAnswer = "Prompt logged. Ask about status, time, or creator.";
+            // 3. Fallback
+            if (!foundAnswer) foundAnswer = "Command logged. My neural network is still learning. Try 'status' or 'creator'.";
 
             addMsg(foundAnswer, 'ai-msg');
         }
@@ -140,3 +150,4 @@
 </script>
 </body>
 </html>
+
