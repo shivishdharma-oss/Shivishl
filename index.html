@@ -2,13 +2,18 @@
     const chat = document.getElementById('chat');
     const userInput = document.getElementById('userInput');
 
-    // THE BRAIN: Add as many questions and answers as you want here
+    // THE EXPANDED BRAIN: Just add more rows here to support more questions!
     const qaPairs = [
-        { keywords: ["who", "created", "made"], answer: "I was created by the brilliant Dharmendra.ar." },
-        { keywords: ["who", "are", "you", "name"], answer: "I am AETHER_OS, your personal Gemini-powered assistant." },
-        { keywords: ["status", "system", "health"], answer: "System status is 100%. All neural nodes are active." },
-        { keywords: ["hello", "hi", "hey"], answer: "System online. Greetings, User." },
-        { keywords: ["help", "command"], answer: "I am programmed to respond to system queries and data analysis requests." }
+        { keywords: ["who", "created", "made", "author"], answer: "I was developed by Dharmendra.ar for this 2025 competition." },
+        { keywords: ["who", "are", "you", "name", "identity"], answer: "I am AETHER_OS, a high-speed AI interface prototype." },
+        { keywords: ["status", "system", "health", "performance"], answer: "All systems are 100% stable. Neural sync is active." },
+        { keywords: ["hello", "hi", "hey", "greetings"], answer: "Hello! System is ready for your commands." },
+        { keywords: ["purpose", "mission", "goal"], answer: "My goal is to provide a seamless bridge between humans and Gemini AI." },
+        { keywords: ["time", "clock", "date"], answer: "The current system time is: " + new Date().toLocaleTimeString() },
+        { keywords: ["github", "link", "repo"], answer: "You can find my source code on Dharmendra's GitHub repository." },
+        { keywords: ["skills", "features"], answer: "I feature instant response logic, keyword detection, and a futuristic UI." },
+        { keywords: ["thank", "thanks"], answer: "You are welcome. Efficiency is my priority." },
+        { keywords: ["bye", "exit", "shutdown"], answer: "Session termination prevented. Please use the 'X' icon to exit." }
     ];
 
     userInput.addEventListener('keypress', function(e) {
@@ -16,22 +21,35 @@
             const originalInput = this.value;
             const prompt = originalInput.toLowerCase();
             
-            // 1. Show your message
             addMsg(originalInput, 'user-msg');
             this.value = "";
 
-            // 2. IMMEDIATE RESPONSE LOGIC (No delay)
-            let foundAnswer = "Command recognized, but data is restricted. Try asking about my status or creator.";
+            let foundAnswer = "";
+
+            // 1. Check for Math (Optional Cool Feature)
+            if (prompt.match(/[0-9]/) && (prompt.includes('+') || prompt.includes('-') || prompt.includes('*'))) {
+                try {
+                    foundAnswer = "Calculation Result: " + eval(prompt);
+                } catch {
+                    foundAnswer = "I detected a math prompt, but the syntax was invalid.";
+                }
+            } 
             
-            for (let pair of qaPairs) {
-                // If any keyword is found in your prompt, give the answer
-                if (pair.keywords.some(keyword => prompt.includes(keyword))) {
-                    foundAnswer = pair.answer;
-                    break;
+            // 2. Search the Brain for Keywords
+            if (!foundAnswer) {
+                for (let pair of qaPairs) {
+                    if (pair.keywords.some(keyword => prompt.includes(keyword))) {
+                        foundAnswer = pair.answer;
+                        break;
+                    }
                 }
             }
 
-            // 3. Display the answer instantly
+            // 3. Default if nothing is found
+            if (!foundAnswer) {
+                foundAnswer = "I have logged the prompt: '" + prompt + "'. I don't have a specific answer for this yet. Try asking about my 'status' or 'creator'.";
+            }
+
             addMsg(foundAnswer, 'ai-msg');
         }
     });
@@ -41,6 +59,6 @@
         div.className = 'msg ' + type;
         div.innerText = text;
         chat.appendChild(div);
-        chat.scrollTop = chat.scrollHeight; // Auto-scrolls to the bottom
+        chat.scrollTop = chat.scrollHeight;
     }
 </script>
