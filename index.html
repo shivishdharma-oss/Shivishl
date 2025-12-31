@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AETHER_OS // Prototype V3</title>
+    <title>AETHER_OS // Prototype V4</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap');
 
@@ -11,7 +11,7 @@
             --neon-cyan: #00f3ff;
             --neon-purple: #bc13fe;
             --bg-dark: #050505;
-            --panel-glass: rgba(20, 20, 20, 0.85);
+            --panel-glass: rgba(20, 20, 20, 0.9);
             --border-glow: rgba(0, 243, 255, 0.3);
         }
 
@@ -28,82 +28,80 @@
             overflow: hidden;
         }
 
-        /* ANIMATED NEON BACKGROUND */
+        /* BACKGROUND GRID */
         .bg-grid {
-            position: fixed;
-            width: 200%; height: 200%;
-            background-image: 
-                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+            position: fixed; width: 200%; height: 200%;
+            background-image: linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
             background-size: 50px 50px;
             transform: perspective(500px) rotateX(60deg);
             animation: moveGrid 20s linear infinite;
-            z-index: -1;
-            top: -50%;
+            z-index: -1; top: -50%;
         }
         @keyframes moveGrid { from { transform: perspective(500px) rotateX(60deg) translateY(0); } to { transform: perspective(500px) rotateX(60deg) translateY(50px); } }
 
-        /* THE OS FRAME */
+        /* OS CONTAINER */
         .os-container {
             width: 95%; max-width: 1200px; height: 85vh;
             background: var(--panel-glass);
             border: 2px solid var(--border-glow);
-            border-radius: 10px;
+            border-radius: 12px;
             display: grid;
             grid-template-columns: 80px 1fr 300px;
-            box-shadow: 0 0 50px rgba(0, 243, 255, 0.1);
-            position: relative;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.15);
         }
 
-        /* LEFT MINIMAL NAV */
+        /* SIDE NAV */
         .nav-side {
             border-right: 1px solid var(--border-glow);
-            display: flex; flex-direction: column; align-items: center; padding: 20px 0;
-            gap: 30px;
+            display: flex; flex-direction: column; align-items: center; padding: 30px 0; gap: 25px;
         }
-        .nav-icon { width: 40px; height: 40px; border: 1px solid var(--border-glow); border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: 0.3s; }
-        .nav-icon:hover { background: var(--neon-cyan); color: black; box-shadow: 0 0 15px var(--neon-cyan); }
+        .nav-icon {
+            width: 45px; height: 45px; border: 1px solid var(--border-glow);
+            border-radius: 8px; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; font-size: 20px;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: var(--neon-cyan);
+        }
+        .nav-icon:hover, .nav-icon.active {
+            background: var(--neon-cyan); color: black;
+            box-shadow: 0 0 20px var(--neon-cyan);
+            transform: scale(1.1);
+        }
 
-        /* MAIN MONITOR area */
-        .monitor { padding: 40px; display: flex; flex-direction: column; gap: 20px; }
-        .glitch-title { font-family: 'Orbitron', sans-serif; font-size: 3rem; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 5px; }
-        
-        /* DATA CARDS */
-        .data-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        /* CENTER MONITOR AREA */
+        .monitor { padding: 40px; display: flex; flex-direction: column; }
+        .view-content { flex-grow: 1; display: none; animation: fadeIn 0.5s forwards; }
+        .view-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .glitch-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; color: var(--neon-cyan); margin-bottom: 20px; }
+
         .data-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-glow);
-            padding: 20px; border-radius: 4px; position: relative;
-            overflow: hidden;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-glow);
+            padding: 20px; border-radius: 8px; margin-bottom: 15px;
         }
-        .data-card::before { content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--neon-cyan); }
 
         /* TERMINAL LOG */
         .terminal {
-            background: rgba(0,0,0,0.5); border: 1px solid var(--border-glow);
-            padding: 15px; font-size: 11px; height: 150px; overflow-y: hidden;
-            color: #0f0; margin-top: auto;
+            background: rgba(0,0,0,0.6); border: 1px solid var(--border-glow);
+            padding: 15px; font-size: 11px; height: 120px; overflow-y: hidden;
+            color: #0f0; margin-top: 20px; border-radius: 4px;
         }
 
-        /* RIGHT PANEL: AI CORE */
-        .ai-core {
-            background: rgba(188, 19, 254, 0.05);
-            border-left: 1px solid var(--border-glow);
-            padding: 20px; display: flex; flex-direction: column; align-items: center;
-        }
+        /* AI CORE PANEL (RIGHT) */
+        .ai-core { border-left: 1px solid var(--border-glow); padding: 25px; text-align: center; display: flex; flex-direction: column; }
         .core-sphere {
-            width: 150px; height: 150px; border-radius: 50%;
+            width: 140px; height: 140px; border-radius: 50%;
             background: radial-gradient(circle, var(--neon-purple) 0%, transparent 70%);
-            box-shadow: 0 0 30px var(--neon-purple);
+            box-shadow: 0 0 35px var(--neon-purple);
             animation: pulse 2s infinite ease-in-out;
-            margin: 40px 0;
+            margin: 40px auto;
         }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.15); filter: brightness(1.4); } }
 
-        .input-box {
-            width: 100%; background: transparent; border: 1px solid var(--neon-purple);
-            padding: 12px; color: white; outline: none; margin-top: auto;
-            font-family: inherit;
+        .chat-box {
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--neon-purple);
+            padding: 12px; color: white; outline: none; margin-top: auto; border-radius: 4px;
         }
     </style>
 </head>
@@ -113,73 +111,96 @@
 
     <div class="os-container">
         <nav class="nav-side">
-            <div class="nav-icon">◈</div>
-            <div class="nav-icon">⚙</div>
-            <div class="nav-icon">⚡</div>
-            <div class="nav-icon" style="margin-top: auto;">✕</div>
+            <div class="nav-icon active" onclick="showView('home', this)" title="Dashboard">◈</div>
+            <div class="nav-icon" onclick="showView('stats', this)" title="Analytics">📈</div>
+            <div class="nav-icon" onclick="showView('shield', this)" title="Security">🛡</div>
+            <div class="nav-icon" onclick="shutdown()" style="margin-top: auto; color: #ff4444;" title="Exit">✕</div>
         </nav>
 
         <main class="monitor">
-            <div class="status-bar" style="font-size: 10px; color: var(--neon-cyan);">SYSTEM_STATUS: ACTIVE // USER: DHARMENDIRAN.AR</div>
-            <h1 class="glitch-title">AETHER_AI</h1>
+            <div style="font-size: 10px; color: var(--neon-cyan); margin-bottom: 10px;">ID: DHARMENDIRAN_AR // ENCRYPTION: AES-256</div>
             
-            <div class="data-grid">
+            <div id="home" class="view-content active">
+                <h1 class="glitch-title">DASHBOARD_</h1>
                 <div class="data-card">
-                    <h4 style="color: var(--neon-cyan)">NEURAL ANALYTICS</h4>
-                    <p style="font-size: 12px; opacity: 0.7;">Processing global data streams... 98.4% Accuracy.</p>
+                    <h3 style="color: var(--neon-cyan)">GEMINI STATUS: ONLINE</h3>
+                    <p style="opacity: 0.7; font-size: 13px;">AI core is currently synchronizing with global data streams. Ready for instruction.</p>
                 </div>
                 <div class="data-card">
-                    <h4 style="color: var(--neon-cyan)">TASK OPTIMIZATION</h4>
-                    <p style="font-size: 12px; opacity: 0.7;">Assignment protocol initiated. Prototype deployment ready.</p>
+                    <h3 style="color: var(--neon-cyan)">MISSION_OBJECTIVE</h3>
+                    <p style="opacity: 0.7; font-size: 13px;">Deploy Gemini AI prototype for global competition. Win probability: 99.9%.</p>
                 </div>
             </div>
 
-            <div class="terminal" id="term">
-                > Initializing Gemini Core...<br>
-                > Loading Neural Framework...<br>
-                > Bypassing Standard UI...<br>
-                > Encrypting User Data...<br>
-                > CONNECTION ESTABLISHED.
+            <div id="stats" class="view-content">
+                <h1 class="glitch-title">ANALYTICS_</h1>
+                <div class="data-card">
+                    <p>Neural Efficiency: 98.4%</p>
+                    <div style="width: 100%; background: #222; height: 10px; margin-top: 10px;"><div style="width: 98%; background: var(--neon-cyan); height: 100%;"></div></div>
+                </div>
+                <div class="data-card">
+                    <p>Data Processing: 4.2 TB/s</p>
+                    <div style="width: 100%; background: #222; height: 10px; margin-top: 10px;"><div style="width: 75%; background: var(--neon-purple); height: 100%;"></div></div>
+                </div>
             </div>
+
+            <div id="shield" class="view-content">
+                <h1 class="glitch-title">SECURITY_</h1>
+                <div class="data-card" style="border-color: #ff4444;">
+                    <h3 style="color: #ff4444;">THREAT DETECTION: NONE</h3>
+                    <p style="opacity: 0.7; font-size: 13px;">Firewall active. Deep packet inspection running. All neural paths secured.</p>
+                </div>
+            </div>
+
+            <div class="terminal" id="term">> System ready...</div>
         </main>
 
         <aside class="ai-core">
-            <div style="font-size: 12px; letter-spacing: 2px;">GEMINI_CORE_V4</div>
+            <div style="font-size: 11px; letter-spacing: 2px; color: var(--neon-purple);">NEURAL_CORE_V4</div>
             <div class="core-sphere"></div>
-            <p style="text-align: center; font-size: 12px; opacity: 0.8;">The AI is listening to your commands.</p>
-            <input type="text" class="input-box" id="aiCmd" placeholder="Enter System Command...">
+            <p style="font-size: 11px; opacity: 0.6; line-height: 1.6;">Gemini is observing your inputs. All actions are logged.</p>
+            <input type="text" class="chat-box" id="aiInput" placeholder="Enter Command...">
         </aside>
     </div>
 
     <script>
-        // TERMINAL AUTO-SCROLL LOGIC
-        const terminal = document.getElementById('term');
-        const logs = [
-            "> Scanning network traffic...",
-            "> Optimizing database clusters...",
-            "> Gemini responding to queries...",
-            "> System efficiency at maximum...",
-            "> AI Prototype active and stable."
-        ];
-        
-        setInterval(() => {
-            const newLog = document.createElement('div');
-            newLog.innerHTML = logs[Math.floor(Math.random() * logs.length)];
-            terminal.appendChild(newLog);
-            if (terminal.childNodes.length > 10) terminal.removeChild(terminal.firstChild);
-        }, 3000);
+        // VIEW SWITCHER LOGIC
+        function showView(viewId, element) {
+            // Hide all views
+            document.querySelectorAll('.view-content').forEach(view => view.classList.remove('active'));
+            // Show selected view
+            document.getElementById(viewId).classList.add('active');
+            // Update Icon state
+            document.querySelectorAll('.nav-icon').forEach(icon => icon.classList.remove('active'));
+            element.classList.add('active');
+            // Log to terminal
+            addLog("> Switched to module: " + viewId.toUpperCase());
+        }
 
-        // INPUT FEEDBACK
-        document.getElementById('aiCmd').addEventListener('keypress', function(e) {
+        // TERMINAL LOGIC
+        function addLog(text) {
+            const term = document.getElementById('term');
+            const entry = document.createElement('div');
+            entry.innerText = text;
+            term.appendChild(entry);
+            if (term.childNodes.length > 8) term.removeChild(term.firstChild);
+        }
+
+        // CHAT INPUT LOGIC
+        document.getElementById('aiInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                const cmd = this.value;
+                const val = this.value;
+                addLog("> USER_CMD: " + val);
+                addLog("> GEMINI_AI: Process initiated for '" + val + "'");
                 this.value = "";
-                const log = document.createElement('div');
-                log.style.color = 'var(--neon-cyan)';
-                log.innerHTML = "> CMD_EXECUTE: " + cmd;
-                terminal.appendChild(log);
             }
         });
+
+        function shutdown() {
+            if(confirm("DANGER: Terminate Aether_OS session?")) {
+                document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%; font-family:Orbitron;'>SYSTEM_OFFLINE</h1>";
+            }
+        }
     </script>
 </body>
 </html>
