@@ -3,172 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dharmendiran.ar | Portfolio</title>
+    <title>Aether AI | Prototype by dharmendiran.ar</title>
     <style>
         :root {
-            --bg: #0f172a;
-            --card: rgba(30, 41, 59, 0.7);
-            --text: #f8fafc;
-            --dim: #94a3b8;
-            --accent: #38bdf8;
+            --bg: #030712;
+            --panel: rgba(17, 24, 39, 0.7);
+            --accent: #8b5cf6; /* Purple AI Theme */
+            --accent-glow: rgba(139, 92, 246, 0.3);
+            --text: #f3f4f6;
             --border: rgba(255, 255, 255, 0.1);
-            --bar: #334155;
         }
 
-        [data-theme="light"] {
-            --bg: #f1f5f9;
-            --card: rgba(255, 255, 255, 0.9);
-            --text: #1e293b;
-            --dim: #64748b;
-            --accent: #0284c7;
-            --border: rgba(0, 0, 0, 0.1);
-            --bar: #e2e8f0;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: 0.3s; scroll-behavior: smooth; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
 
         body {
             background-color: var(--bg);
-            min-height: 100vh;
+            background-image: 
+                radial-gradient(at 0% 0%, var(--accent-glow) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.1) 0px, transparent 50%);
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: var(--text);
-            padding: 80px 20px;
+            overflow: hidden;
         }
 
-        /* MATRIX RAIN BACKGROUND */
-        .matrix-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; justify-content: space-around;
-            z-index: -1; opacity: 0.1; pointer-events: none;
-        }
-        .matrix-bg span {
-            writing-mode: vertical-rl; text-orientation: upright;
-            font-family: monospace; font-size: 18px; color: var(--accent);
-            animation: fall linear infinite;
-        }
-        @keyframes fall { 0% { transform: translateY(-100%); } 100% { transform: translateY(100vh); } }
-
-        /* THE CARD */
-        .card {
-            background: var(--card);
-            width: 100%;
-            max-width: 500px;
-            padding: 40px;
-            border-radius: 30px;
-            backdrop-filter: blur(15px);
+        /* MAIN CONTAINER */
+        .dashboard {
+            width: 90%;
+            max-width: 1000px;
+            height: 80vh;
+            background: var(--panel);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
             border: 1px solid var(--border);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-            text-align: center;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        .profile-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--accent); margin-bottom: 15px; object-fit: cover; }
-
-        .typewriter {
-            font-size: 28px; margin-bottom: 5px; overflow: hidden; 
-            border-right: .15em solid var(--accent); white-space: nowrap; 
-            margin: 0 auto; width: fit-content; letter-spacing: .05em;
-            animation: typing 2.5s steps(20, end), blink-caret .75s step-end infinite;
+        /* SIDEBAR */
+        .sidebar {
+            border-right: 1px solid var(--border);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
-        @keyframes typing { from { width: 0 } to { width: 100% } }
-        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--accent); } }
 
-        .role { color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 25px; letter-spacing: 2px; }
+        .logo { font-weight: 800; font-size: 20px; color: var(--accent); letter-spacing: 1px; }
 
-        .section-title { font-size: 13px; text-align: left; margin: 25px 0 12px; color: var(--dim); text-transform: uppercase; font-weight: 800; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
-
-        /* PROJECT GRID */
-        .project-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
-        .project-item {
-            background: rgba(0,0,0,0.1); padding: 15px; border-radius: 15px; 
-            text-decoration: none; color: var(--text); border: 1px solid var(--border);
-            font-size: 13px; font-weight: 600; display: block;
+        .nav-item {
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+            color: #9ca3af;
         }
-        .project-item:hover { border-color: var(--accent); transform: translateY(-3px); background: rgba(56, 189, 248, 0.05); }
+        .nav-item.active { background: var(--accent); color: white; }
+        .nav-item:hover:not(.active) { background: rgba(255,255,255,0.05); }
 
-        /* SKILLS */
-        .skill-bar { margin-bottom: 15px; text-align: left; }
-        .skill-info { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
-        .bar-bg { background: var(--bar); height: 8px; border-radius: 10px; overflow: hidden; }
-        .bar-fill { background: var(--accent); height: 100%; border-radius: 10px; }
-
-        .btn {
-            width: 100%; padding: 14px; background: var(--accent); color: white;
-            border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 15px;
+        /* MAIN CONTENT */
+        .main-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            overflow-y: auto;
         }
-        .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-        #theme-toggle { position: fixed; top: 20px; left: 20px; cursor: pointer; padding: 8px 15px; border-radius: 20px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 12px; z-index: 10; }
-        #clock { position: fixed; top: 20px; right: 20px; font-family: monospace; color: var(--accent); font-size: 12px; }
+        .header h1 { font-size: 32px; margin-bottom: 5px; }
+        .header p { color: #9ca3af; }
+
+        /* TASK CARDS */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+        .card h3 { font-size: 16px; margin-bottom: 10px; color: var(--accent); }
+        .card p { font-size: 13px; color: #cbd5e1; line-height: 1.5; }
+
+        /* PROTOTYPE CHAT BOX */
+        .chat-container {
+            margin-top: auto;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid var(--border);
+        }
+        .chat-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        /* LIVE ELEMENTS */
+        #clock { font-family: monospace; color: var(--accent); margin-top: auto; font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <div class="matrix-bg">
-        <span style="animation-duration: 8s;">101101</span>
-        <span style="animation-duration: 5s;">010110</span>
-        <span style="animation-duration: 12s;">111001</span>
-        <span style="animation-duration: 6s;">101010</span>
-    </div>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">AETHER AI</div>
+            <div class="nav-item active">🏠 Dashboard</div>
+            <div class="nav-item">📅 Schedule</div>
+            <div class="nav-item">⚙️ Settings</div>
+            
+            <div id="clock">00:00:00</div>
+            <div style="font-size: 10px; color: #4b5563;">Authored by dharmendiran.ar</div>
+        </aside>
 
-    <button id="theme-toggle">🌓 Theme</button>
-    <div id="clock">00:00:00</div>
+        <main class="main-content">
+            <header class="header">
+                <h1 id="greeting">Good Morning</h1>
+                <p>Gemini has analyzed your schedule for today.</p>
+            </header>
 
-    <div class="card">
-        <img src="https://xsgames.co/randomusers/assets/avatars/male/74.jpg" alt="Profile" class="profile-img">
-        <h1 class="typewriter">dharmendiran.ar</h1>
-        <div class="role">Full Stack Developer</div>
+            <div class="grid">
+                <div class="card">
+                    <h3>Focus Mode</h3>
+                    <p>AI suggests 9:00 AM - 11:00 AM for deep coding. Notifications will be muted.</p>
+                </div>
+                <div class="card">
+                    <h3>Smart Summary</h3>
+                    <p>You have 3 meetings today. Gemini has prepared brief talking points for each.</p>
+                </div>
+            </div>
 
-        <div class="section-title">Latest Projects</div>
-        <div class="project-grid">
-            <a href="#" class="project-item">🚀 AI Chatbot</a>
-            <a href="#" class="project-item">💻 Web App</a>
-            <a href="#" class="project-item">📊 Data Tool</a>
-            <a href="#" class="project-item">📱 Mobile UI</a>
-        </div>
-
-        <div class="section-title">Core Skills</div>
-        <div class="skill-bar">
-            <div class="skill-info"><span>Python & Automation</span><span>85%</span></div>
-            <div class="bar-bg"><div class="bar-fill" style="width: 85%;"></div></div>
-        </div>
-        <div class="skill-bar">
-            <div class="skill-info"><span>Frontend Architecture</span><span>95%</span></div>
-            <div class="bar-bg"><div class="bar-fill" style="width: 95%;"></div></div>
-        </div>
-
-        <div class="section-title">Inquiries</div>
-        <button class="btn" id="emailBtn">📧 Copy Gmail Address</button>
-        
-        <p style="margin-top: 25px; font-size: 10px; color: var(--dim);">© 2025 DHARMENDIRAN.AR</p>
+            <section class="chat-container">
+                <div style="font-size: 12px; color: var(--accent); margin-bottom: 10px; font-weight: bold;">Ask Aether AI...</div>
+                <input type="text" class="chat-input" id="aiInput" placeholder="How can I help you complete your assignment?">
+            </section>
+        </main>
     </div>
 
     <script>
-        // Clock
-        setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
-        }, 1000);
+        // 1. LIVE CLOCK
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString();
+            
+            // 2. DYNAMIC GREETING
+            const hour = now.getHours();
+            const greeting = document.getElementById('greeting');
+            if (hour < 12) greeting.innerText = "Good Morning, Dharmendra";
+            else if (hour < 18) greeting.innerText = "Good Afternoon, Dharmendra";
+            else greeting.innerText = "Good Evening, Dharmendra";
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-        // Theme Toggle
-        document.getElementById('theme-toggle').addEventListener('click', () => {
-            const doc = document.documentElement;
-            doc.setAttribute('data-theme', doc.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
-        });
-
-        // Email Copy Logic
-        const myEmail = "dharmendiran.ar@gmail.com";
-        document.getElementById('emailBtn').addEventListener('click', function() {
-            navigator.clipboard.writeText(myEmail).then(() => {
-                const originalText = this.innerText;
-                this.innerText = "🎉 Copied!";
-                this.style.background = "#22c55e";
-                setTimeout(() => { 
-                    this.innerText = originalText; 
-                    this.style.background = "var(--accent)";
-                }, 2000);
-            });
+        // 3. INTERACTIVE CHAT PROTOTYPE
+        const aiInput = document.getElementById('aiInput');
+        aiInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                const val = aiInput.value;
+                aiInput.value = "";
+                alert("Prototype Response: Gemini is processing your request: '" + val + "'");
+            }
         });
     </script>
 </body>
