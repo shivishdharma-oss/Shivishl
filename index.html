@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AETHER_OS // Scroll Fix</title>
+    <title>AETHER_OS // Dharmendiran.ar</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap');
         
@@ -12,35 +12,30 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--bg-dark); color: white; font-family: 'JetBrains Mono', monospace; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         
-        /* GRID BACKGROUND */
         .bg-grid { position: fixed; width: 200%; height: 200%; background-image: linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg); z-index: -1; top: -50%; }
 
-        .os-container { width: 95%; max-width: 1100px; height: 85vh; background: rgba(10, 10, 20, 0.9); border: 2px solid var(--neon-cyan); border-radius: 15px; display: flex; box-shadow: 0 0 30px rgba(0, 243, 255, 0.2); position: relative; }
+        .os-container { width: 95%; max-width: 1100px; height: 85vh; background: rgba(10, 10, 20, 0.9); border: 2px solid var(--neon-cyan); border-radius: 15px; display: flex; box-shadow: 0 0 30px rgba(0, 243, 255, 0.2); }
         
-        /* SIDEBAR */
         .nav-side { width: 70px; border-right: 1px solid rgba(0, 243, 255, 0.3); display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px; flex-shrink: 0; }
         .nav-icon { width: 45px; height: 45px; border: 1px solid var(--neon-cyan); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--neon-cyan); transition: 0.3s; }
         .nav-icon.active { background: var(--neon-cyan); color: black; box-shadow: 0 0 15px var(--neon-cyan); }
 
-        /* MAIN CONTENT AREA */
         .main-content { flex: 1; padding: 25px; display: flex; flex-direction: column; min-width: 0; }
         
-        /* THE CHAT BOX - SCROLL FIXED HERE */
         .chat-area { 
             flex: 1; 
             background: rgba(0,0,0,0.6); 
             border-radius: 10px; 
             padding: 20px; 
-            overflow-y: auto; /* This enables the scrollbar */
+            overflow-y: auto; 
             display: flex; 
             flex-direction: column; 
             gap: 15px; 
             border: 1px solid rgba(0, 243, 255, 0.2);
-            scrollbar-width: thin; /* Firefox */
+            scrollbar-width: thin;
             scrollbar-color: var(--neon-cyan) transparent;
         }
 
-        /* CUSTOM SCROLLBAR FOR CHROME/EDGE */
         .chat-area::-webkit-scrollbar { width: 6px; }
         .chat-area::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 10px; }
 
@@ -51,7 +46,6 @@
         .input-area { margin-top: 20px; display: flex; gap: 10px; flex-shrink: 0; }
         input { flex: 1; background: #000; border: 1px solid var(--neon-purple); padding: 14px; color: white; border-radius: 5px; outline: none; font-family: inherit; }
         button { background: var(--neon-purple); border: none; padding: 0 25px; color: white; cursor: pointer; border-radius: 5px; font-weight: bold; font-family: 'Orbitron'; transition: 0.3s; }
-        button:hover { background: #9d09d6; box-shadow: 0 0 15px var(--neon-purple); }
         
         .tab { display: none; height: 100%; flex-direction: column; }
         .tab.active { display: flex; }
@@ -68,11 +62,11 @@
         </div>
 
         <div class="main-content">
-            <h2 style="color:var(--neon-cyan); margin-bottom:15px; font-family: 'Orbitron'; letter-spacing: 2px;">AETHER_OS_V4</h2>
+            <h2 style="color:var(--neon-cyan); margin-bottom:15px; font-family: 'Orbitron'; letter-spacing: 2px;">AETHER_OS // DHARMENDIRAN.AR</h2>
             
             <div id="home" class="tab active">
                 <div class="chat-area" id="chat">
-                    <div class="msg ai-msg">Neural core initialized. Ask me multiple questions to test the scrolling! (e.g., math, creator, status).</div>
+                    <div class="msg ai-msg">Neural core initialized. Greetings, Dharmendiran. How can I assist you today?</div>
                 </div>
                 <div class="input-area">
                     <input type="text" id="userInput" placeholder="Command input..." autocomplete="off">
@@ -85,7 +79,7 @@
                 <div style="margin-top:20px; padding:15px; border:1px solid var(--neon-cyan); border-radius:5px;">
                     <p>Uptime: 99.9%</p>
                     <p>Latency: 0.001ms</p>
-                    <p>User: DHARMENDIRAN.AR</p>
+                    <p>Authorized User: Dharmendiran.ar</p>
                 </div>
             </div>
         </div>
@@ -108,11 +102,8 @@
             div.innerText = text;
             chat.appendChild(div);
             
-            // AUTOMATIC SCROLL TO BOTTOM
-            chat.scrollTo({
-                top: chat.scrollHeight,
-                behavior: 'smooth'
-            });
+            // Auto-scroll to bottom
+            chat.scrollTop = chat.scrollHeight;
         }
 
         function processInput() {
@@ -125,26 +116,25 @@
             let response = "";
             const lowVal = val.toLowerCase();
 
-            // MATH LOGIC
+            // MATH ENGINE
             const mathPattern = /[0-9+\-*/().\s]{3,}/;
             if (mathPattern.test(val) && /[+\-*/]/.test(val)) {
                 try {
                     const cleanMath = val.replace(/[^0-9+\-*/().]/g, '');
                     response = "Result: " + eval(cleanMath);
-                } catch(e) { response = "Math logic error. Check syntax."; }
+                } catch(e) { response = "Math logic error."; }
             } 
-            // KEYWORDS
+            // UPDATED BRAIN RESPONSES
             else if (lowVal.includes("who") || lowVal.includes("create")) {
-                response = "I was developed by Dharmendiran A R for the 2025 AI showcase.";
+                response = "I was developed by Dharmendiran.ar for the 2025 AI showcase.";
             } else if (lowVal.includes("status") || lowVal.includes("system")) {
-                response = "Global systems are functional. All data packets are secure.";
+                response = "Systems stable. Encryption active. Welcome, Dharmendiran.";
             } else if (lowVal.includes("hello") || lowVal.includes("hi")) {
-                response = "System ready. Greetings Dharmendiran. Waiting for input.";
+                response = "System ready. Greetings, Dharmendiran. Waiting for input.";
             } else {
-                response = "Analysis of '" + val + "' complete. I am currently in prototype mode. Ask me math or about my status.";
+                response = "I have logged your request. Try asking 'Who created you?' or a math question.";
             }
 
-            // Respond instantly
             addMessage(response, 'ai-msg');
         }
 
@@ -152,4 +142,3 @@
     </script>
 </body>
 </html>
-
