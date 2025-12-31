@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AETHER_OS // Neural Prototype</title>
+    
+    <title>AETHER_OS | AI Prototype by dharmendiran.ar</title>
+    <meta name="description" content="Next-generation AI Dashboard Prototype powered by Gemini architecture.">
+    <meta property="og:title" content="AETHER_OS // Neural Interface">
+    <meta property="og:image" content="https://xsgames.co/randomusers/assets/avatars/male/74.jpg">
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap');
 
@@ -15,52 +20,57 @@
             --border-glow: rgba(0, 243, 255, 0.4);
         }
 
+        /* BOOT SCREEN */
+        #boot-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: black;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--neon-cyan);
+        }
+
+        .loader-bar { width: 200px; height: 2px; background: #222; margin-top: 20px; position: relative; overflow: hidden; }
+        .loader-progress { position: absolute; width: 0%; height: 100%; background: var(--neon-cyan); animation: load 2s forwards; }
+        @keyframes load { to { width: 100%; } }
+
+        /* THE REST OF YOUR PREVIOUS STYLES (KEEP THEM ALL) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--bg-dark); color: white; font-family: 'JetBrains Mono', monospace; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-
-        /* GRID ANIMATION */
         .bg-grid { position: fixed; width: 200%; height: 200%; background-image: linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg); animation: moveGrid 15s linear infinite; z-index: -1; top: -50%; }
-        @keyframes moveGrid { from { transform: perspective(500px) rotateX(60deg) translateY(0); } to { transform: perspective(500px) rotateX(60deg) translateY(40px); } }
-
-        /* MAIN CONTAINER */
-        .os-container { width: 95%; max-width: 1200px; height: 85vh; background: var(--panel-glass); border: 2px solid var(--border-glow); border-radius: 15px; display: grid; grid-template-columns: 80px 1fr 320px; box-shadow: 0 0 50px rgba(0, 243, 255, 0.2); position: relative; }
-
-        /* NAVIGATION */
+        @keyframes moveGrid { from { transform: translateY(0); } to { transform: translateY(40px); } }
+        .os-container { width: 95%; max-width: 1200px; height: 85vh; background: var(--panel-glass); border: 2px solid var(--border-glow); border-radius: 15px; display: grid; grid-template-columns: 80px 1fr 320px; box-shadow: 0 0 50px rgba(0, 243, 255, 0.2); }
         .nav-side { border-right: 1px solid var(--border-glow); display: flex; flex-direction: column; align-items: center; padding: 30px 0; gap: 20px; }
-        .nav-icon { width: 50px; height: 50px; border: 1px solid var(--border-glow); border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: 0.3s; color: var(--neon-cyan); }
-        .nav-icon:hover, .nav-icon.active { background: var(--neon-cyan); color: black; box-shadow: 0 0 20px var(--neon-cyan); }
-
-        /* CENTER AREA */
-        .monitor { padding: 40px; display: flex; flex-direction: column; position: relative; }
-        .glitch-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; color: var(--neon-cyan); margin-bottom: 20px; text-shadow: 0 0 10px var(--neon-cyan); }
-        .view-content { display: none; animation: fadeIn 0.4s ease; }
-        .view-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* CHAT BUBBLES */
+        .nav-icon { width: 50px; height: 50px; border: 1px solid var(--border-glow); border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--neon-cyan); }
+        .monitor { padding: 40px; display: flex; flex-direction: column; }
+        .glitch-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; color: var(--neon-cyan); margin-bottom: 20px; }
         .chat-display { flex-grow: 1; background: rgba(0,0,0,0.4); border: 1px solid var(--border-glow); border-radius: 8px; padding: 20px; overflow-y: auto; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 8px 15px; border-radius: 4px; max-width: 80%; font-size: 13px; line-height: 1.4; }
+        .msg { padding: 8px 15px; border-radius: 4px; max-width: 80%; font-size: 13px; }
         .user-msg { align-self: flex-end; background: var(--neon-cyan); color: black; font-weight: bold; }
         .ai-msg { align-self: flex-start; border: 1px solid var(--neon-purple); background: rgba(188, 19, 254, 0.1); color: var(--neon-purple); }
-
-        /* AI CORE (RIGHT) */
-        .ai-panel { border-left: 1px solid var(--border-glow); padding: 20px; display: flex; flex-direction: column; align-items: center; background: rgba(0,0,0,0.2); }
+        .ai-panel { border-left: 1px solid var(--border-glow); padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .core-sphere { width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, var(--neon-purple) 0%, transparent 75%); box-shadow: 0 0 30px var(--neon-purple); animation: pulse 2s infinite ease-in-out; margin: 30px 0; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } }
-
-        .input-area { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
-        .input-box { background: transparent; border: 1px solid var(--neon-purple); padding: 12px; color: white; outline: none; font-family: inherit; border-radius: 4px; }
-        .status-text { font-size: 10px; color: var(--neon-purple); text-transform: uppercase; letter-spacing: 1px; }
-
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .input-box { width: 100%; background: transparent; border: 1px solid var(--neon-purple); padding: 12px; color: white; outline: none; border-radius: 4px; }
     </style>
 </head>
 <body>
+
+<div id="boot-screen">
+    <div style="font-size: 12px;">INITIALIZING AETHER_CORE...</div>
+    <div class="loader-bar"><div class="loader-progress"></div></div>
+    <div id="boot-logs" style="font-size: 10px; margin-top: 15px; opacity: 0.5;"></div>
+</div>
 
 <div class="bg-grid"></div>
 
 <div class="os-container">
     <nav class="nav-side">
-        <div class="nav-icon active">◈</div>
+        <div class="nav-icon">◈</div>
         <div class="nav-icon">📊</div>
         <div class="nav-icon">🛡</div>
     </nav>
@@ -70,73 +80,48 @@
         <h1 class="glitch-title">AETHER_OS</h1>
 
         <div class="chat-display" id="chat">
-            <div class="msg ai-msg">System Initialized. I am Aether AI. How can I assist you today?</div>
-        </div>
-
-        <div id="terminal" style="font-size: 11px; color: #0f0; opacity: 0.6; height: 40px; overflow: hidden;">
-            > Waiting for user input...
+            <div class="msg ai-msg">Welcome, Dharmendra. System online. Spell-check and Neural response active.</div>
         </div>
     </main>
 
     <aside class="ai-panel">
-        <div class="status-text">Neural Core Active</div>
+        <div style="font-size: 10px; color: var(--neon-purple);">CORE PULSE</div>
         <div class="core-sphere"></div>
-        <div class="input-area">
-            <input type="text" class="input-box" id="userInput" placeholder="Type command here..." autofocus>
-            <p style="font-size: 10px; opacity: 0.5; text-align: center;">Press ENTER to transmit</p>
-        </div>
+        <input type="text" class="input-box" id="userInput" placeholder="Enter Command..." autofocus>
     </aside>
 </div>
 
 <script>
+    // BOOT SEQUENCE LOGIC
+    const logs = ["Kernel Loading...", "Neural Links Established...", "Bypassing Security...", "Access Granted."];
+    let logIdx = 0;
+    const logInterval = setInterval(() => {
+        if(logIdx < logs.length) {
+            document.getElementById('boot-logs').innerHTML += logs[logIdx] + "<br>";
+            logIdx++;
+        }
+    }, 400);
+
+    setTimeout(() => {
+        document.getElementById('boot-screen').style.display = 'none';
+    }, 2500);
+
+    // AI LOGIC (Copy/Paste from previous step)
     const chat = document.getElementById('chat');
     const userInput = document.getElementById('userInput');
-    const terminal = document.getElementById('terminal');
-
-    // 1. AUTO-CORRECT DICTIONARY
-    const corrections = {
-        "hllo": "Hello",
-        "hru": "How are you",
-        "nam": "name",
-        "wat": "What",
-        "thear": "there",
-        "ai": "AI",
-        "cod": "code"
-    };
-
-    // 2. AI RESPONSE LOGIC
-    const responses = {
-        "hello": "Greetings, User. My neural pathways are operating at 98% efficiency. How can I help?",
-        "what is your name": "I am Aether_OS, powered by Gemini AI architecture.",
-        "who created you": "I was developed by Dharmendra.ar as a high-performance AI prototype.",
-        "status": "All systems nominal. Encryption active. Firewall secure.",
-        "help": "Available commands: STATUS, ANALYZE, ENCRYPT, SHUTDOWN.",
-        "default": "Analysis complete. I have processed your input and am ready for the next command."
-    };
+    const corrections = { "hllo": "Hello", "hru": "How are you", "wat": "What" };
+    const responses = { "hello": "Greetings. How may I assist?", "status": "All systems optimal." };
 
     userInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter' && this.value.trim() !== "") {
-            let rawText = this.value;
-            
-            // SPELL CHECK / AUTO-CORRECT
-            let words = rawText.split(" ");
-            let correctedWords = words.map(word => corrections[word.toLowerCase()] || word);
-            let finalMsg = correctedWords.join(" ");
-
-            // DISPLAY USER MSG
-            addMsg(finalMsg, 'user-msg');
+            let words = this.value.split(" ");
+            let corrected = words.map(w => corrections[w.toLowerCase()] || w).join(" ");
+            addMsg(corrected, 'user-msg');
             this.value = "";
-
-            // TERMINAL LOG
-            terminal.innerHTML = "> ANALYZING INPUT...<br>> AUTO-CORRECT APPLIED: " + (rawText !== finalMsg ? "YES" : "NO");
-
-            // AI RESPONSE DELAY (Thinking effect)
             setTimeout(() => {
-                let lowerMsg = finalMsg.toLowerCase();
-                let reply = responses[lowerMsg] || responses["default"];
+                let reply = responses[corrected.toLowerCase()] || "Input processed by Gemini Neural Core.";
                 addMsg(reply, 'ai-msg');
-                terminal.innerHTML = "> WAITING FOR USER INPUT...";
-            }, 1000);
+            }, 800);
         }
     });
 
@@ -145,7 +130,7 @@
         div.className = 'msg ' + type;
         div.innerText = text;
         chat.appendChild(div);
-        chat.scrollTop = chat.scrollHeight; // Auto-scroll to bottom
+        chat.scrollTop = chat.scrollHeight;
     }
 </script>
 
