@@ -27,7 +27,7 @@
 
 <div class="os-container">
     <div class="sidebar">
-        <h3 style="font-family:'Orbitron'; color:var(--neon-cyan); font-size: 14px; margin-bottom: 25px;">WORLD_HEALTH_V7</h3>
+        <h3 style="font-family:'Orbitron'; color:var(--neon-cyan); font-size: 14px; margin-bottom: 25px;">WORLD_HEALTH_V8</h3>
         
         <div id="btn-Shiv" class="member active" onclick="setUser('Shivish')">
             Shivish <p>DOB: 14/02/2013</p>
@@ -40,11 +40,11 @@
         </div>
         
         <div style="margin-top: 20px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 5px;">
-            <p style="font-size: 10px; color: var(--neon-cyan);">CURRENT STATUS:</p>
-            <p id="ageDisplay" style="font-size: 12px; margin-top: 5px;"></p>
+            <p style="font-size: 10px; color: var(--neon-cyan);">LIVE BIO-DATA (2025):</p>
+            <p id="ageDisplay" style="font-size: 12px; margin-top: 5px; color: white;"></p>
         </div>
 
-        <p style="margin-top: auto; font-size: 9px; color: #444;">ENGINEERING BY SHIVISH.AR</p>
+        <p style="margin-top: auto; font-size: 9px; color: #444;">DEVELOPER: SHIVISH.AR</p>
     </div>
     
     <div class="main">
@@ -60,8 +60,8 @@
         <div id="history">Intake Log: Ready.</div>
 
         <div class="input-group">
-            <p style="font-size: 11px; color: #666; margin-bottom: 5px;">DATABASE ACTIVE: WORLD DISHES + SIDES</p>
-            <input type="text" id="foodIn" placeholder="Enter dish (e.g. Pasta, Kuruma, Sambar...)">
+            <p style="font-size: 11px; color: #666; margin-bottom: 5px;">WORLD DATABASE SEARCH (Indian, Western, Asian)</p>
+            <input type="text" id="foodIn" placeholder="Type food: Paniyaram, Pasta, Chicken 65...">
             <button class="btn-main" onclick="logFood()">LOG</button>
         </div>
     </div>
@@ -69,7 +69,8 @@
 
 <script>
     let user = "Shivish";
-    const currentYear = 2026;
+    // Fixed reference date to year 2025
+    const today = new Date("2025-01-01"); 
 
     const data = {
         "Shivish": { dob: "2013-02-14", c: 0, s: 0, p: 0, h: [] },
@@ -78,18 +79,26 @@
     };
 
     const foods = {
+        // SOUTH INDIAN & CHUTNEYS
         "idli": { c: 65, s: 1, p: 2 }, "dosa": { c: 170, s: 1, p: 4 }, "paniyaram": { c: 50, s: 1, p: 1 },
         "sambar": { c: 120, s: 3, p: 5 }, "coconut chutney": { c: 90, s: 1, p: 2 }, "tomato chutney": { c: 45, s: 4, p: 1 },
         "peanut chutney": { c: 150, s: 2, p: 6 }, "kuruma": { c: 180, s: 3, p: 4 }, "parotta": { c: 260, s: 2, p: 5 },
         "chicken 65": { c: 320, s: 1, p: 22 }, "biryani": { c: 480, s: 2, p: 18 },
-        "egg fried rice": { c: 350, s: 2, p: 12 }, "chicken fried rice": { c: 450, s: 2, p: 18 },
+        // GLOBAL
         "pasta": { c: 320, s: 6, p: 12 }, "noodles": { c: 380, s: 4, p: 8 }, "cupcake": { c: 250, s: 22, p: 3 },
+        "egg fried rice": { c: 350, s: 2, p: 12 }, "chicken fried rice": { c: 450, s: 2, p: 18 },
+        "pizza": { c: 280, s: 5, p: 11 }, "burger": { c: 450, s: 8, p: 18 }, "sushi": { c: 200, s: 5, p: 15 },
         "soda": { c: 150, s: 39, p: 0 }, "mutton curry": { c: 420, s: 1, p: 28 }
     };
 
     function calculateAge(dobString) {
-        const birthday = new Date(dobString);
-        return currentYear - birthday.getFullYear();
+        const birthDate = new Date(dobString);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
     }
 
     function setUser(name) {
@@ -108,7 +117,7 @@
         if (match) {
             const f = foods[match];
             data[user].c += f.c; data[user].s += f.s; data[user].p += f.p;
-            data[user].h.unshift(`[${new Date().toLocaleTimeString()}] ${match.toUpperCase()} logged.`);
+            data[user].h.unshift(`[Logged] ${match.toUpperCase()}`);
             updateUI();
             document.getElementById('foodIn').value = "";
         }
@@ -125,7 +134,7 @@
         document.getElementById('alert').style.display = (u.s > 45 || u.c > 2000) ? 'block' : 'none';
     }
 
-    // Initialize Age Display
+    // Initial load
     updateUI();
 </script>
 
