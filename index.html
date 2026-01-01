@@ -5,7 +5,7 @@
     <title>AETHER_HEALTH // Shivish.ar</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap');
-        :root { --neon-cyan: #00f3ff; --alert-red: #ff4444; --safe-green: #00ff88; }
+        :root { --neon-cyan: #00f3ff; --alert-red: #ff4444; --safe-green: #00ff88; --warning-orange: #ffaa00; }
         
         * { box-sizing: border-box; }
         body { background: #000; color: white; font-family: 'JetBrains Mono', monospace; margin: 0; overflow: hidden; height: 100vh; }
@@ -38,18 +38,22 @@
         .main { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; }
         .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 15px 0; }
         .box { background: #111; padding: 15px; border-radius: 8px; border-left: 3px solid var(--neon-cyan); position: relative; }
-        .box span { font-size: 10px; color: #888; letter-spacing: 1px; }
         .box h2 { margin: 5px 0; font-family: 'Orbitron'; color: var(--neon-cyan); font-size: 24px; }
-        .target-label { font-size: 9px; color: #555; margin-top: 5px; }
         
+        /* --- ALERT PANEL --- */
+        .alert-zone { min-height: 50px; margin-bottom: 10px; }
+        .alert { display: none; padding: 12px; border-radius: 5px; font-weight: bold; font-family: 'Orbitron'; text-align: center; font-size: 11px; margin-bottom: 5px; letter-spacing: 1px; }
+        .alert-danger { background: rgba(255, 68, 68, 0.2); border: 1px solid var(--alert-red); color: var(--alert-red); animation: shake 0.5s infinite; }
+        .alert-warning { background: rgba(255, 170, 0, 0.2); border: 1px solid var(--warning-orange); color: var(--warning-orange); }
+
+        @keyframes shake { 0% { transform: translate(0); } 25% { transform: translate(2px); } 50% { transform: translate(-2px); } 100% { transform: translate(0); } }
+
         .avg-bar-bg { width: 100%; height: 4px; background: #222; margin-top: 10px; border-radius: 2px; }
         .avg-bar-fill { height: 100%; background: var(--safe-green); width: 0%; transition: 0.5s; }
 
         .input-group { background: #1a1a1a; padding: 20px; border-radius: 8px; border: 1px solid #333; margin-top: auto; }
         input { background: #000; border: 1px solid var(--neon-cyan); color: white; padding: 12px; width: 70%; border-radius: 4px; outline: none; }
         .btn-main { background: var(--neon-cyan); border: none; padding: 12px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; font-family: 'Orbitron'; }
-        
-        .alert { display: none; background: rgba(255, 68, 68, 0.2); border: 1px solid var(--alert-red); color: var(--alert-red); padding: 12px; text-align: center; margin-bottom: 10px; font-weight: bold; border-radius: 5px; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -61,49 +65,50 @@
 
     <div class="os-container" id="app-content">
         <div class="sidebar">
-            <h3 style="font-family:'Orbitron'; color:var(--neon-cyan); font-size: 14px; margin-bottom: 25px;">SMART_HEALTH_V10</h3>
+            <h3 style="font-family:'Orbitron'; color:var(--neon-cyan); font-size: 14px; margin-bottom: 25px;">SMART_HEALTH_V11</h3>
             <div id="btn-Shiv" class="member active" onclick="setUser('Shivish')">Shivish <p style="font-size:10px; color:#666">14/02/2013</p></div>
             <div id="btn-Dad" class="member" onclick="setUser('Father')">Father <p style="font-size:10px; color:#666">09/03/1977</p></div>
             <div id="btn-Mom" class="member" onclick="setUser('Mother')">Mother <p style="font-size:10px; color:#666">26/06/1983</p></div>
             
             <div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 5px; border: 1px solid #222;">
-                <p style="font-size: 10px; color: var(--neon-cyan);">PROFILE BIOMETRICS:</p>
-                <p id="ageDisplay" style="font-size: 13px; margin: 10px 0 5px 0;"></p>
-                <p id="targetDisplay" style="font-size: 11px; color: #888; line-height: 1.4;"></p>
+                <p id="ageDisplay" style="font-size: 13px; margin: 0;"></p>
+                <p id="targetDisplay" style="font-size: 11px; color: #888; margin-top: 10px;"></p>
             </div>
             <p style="margin-top: auto; font-size: 9px; color: #444;">DEVELOPER: SHIVISH.AR</p>
         </div>
         
         <div class="main">
-            <div id="alert" class="alert">⚠️ WARNING: DAILY CALORIE TARGET EXCEEDED</div>
+            <div class="alert-zone">
+                <div id="alert-cal" class="alert alert-danger">CRITICAL: CALORIE LIMIT EXCEEDED</div>
+                <div id="alert-sug" class="alert alert-danger">WARNING: SUGAR SPIKE DETECTED</div>
+                <div id="alert-pro" class="alert alert-warning">INFO: LOW PROTEIN DENSITY DETECTED</div>
+            </div>
+
             <h1 id="userLabel" style="font-family:'Orbitron'; margin:0; font-size: 22px;">Profile: Shivish</h1>
             
             <div class="stats">
                 <div class="box">
-                    <span>TOTAL CALORIES</span>
+                    <span>CALORIES</span>
                     <h2 id="cals">0</h2>
                     <div class="avg-bar-bg"><div id="cal-fill" class="avg-bar-fill"></div></div>
-                    <div id="cal-target" class="target-label">Target: 0</div>
                 </div>
                 <div class="box">
                     <span>SUGAR (g)</span>
                     <h2 id="sugs">0</h2>
                     <div class="avg-bar-bg"><div id="sug-fill" class="avg-bar-fill" style="background: var(--alert-red)"></div></div>
-                    <div id="sug-target" class="target-label">Limit: 0g</div>
                 </div>
                 <div class="box">
                     <span>PROTEIN (g)</span>
                     <h2 id="pros">0</h2>
                     <div class="avg-bar-bg"><div id="pro-fill" class="avg-bar-fill" style="background: #00ffcc"></div></div>
-                    <div id="pro-target" class="target-label">Goal: 0g</div>
                 </div>
             </div>
 
-            <div id="history" style="font-size: 11px; color: #555; flex-grow: 1; overflow-y: auto; margin-top: 10px; border-top: 1px solid #222; padding-top: 10px;">Intake Log: Ready.</div>
+            <div id="history" style="font-size: 11px; color: #555; flex-grow: 1; overflow-y: auto; margin-top: 10px; border-top: 1px solid #222; padding-top: 10px;">Log Ready.</div>
 
             <div class="input-group">
-                <input type="text" id="foodIn" placeholder="Enter dish (e.g. Pasta, Kuruma, Sambar...)">
-                <button class="btn-main" onclick="logFood()">LOG INTAKE</button>
+                <input type="text" id="foodIn" placeholder="Enter Global Dish...">
+                <button class="btn-main" onclick="logFood()">LOG</button>
             </div>
         </div>
     </div>
@@ -115,8 +120,8 @@
             setTimeout(() => {
                 document.getElementById('loading-screen').style.display = 'none';
                 document.getElementById('app-content').style.opacity = '1';
-            }, 1000);
-        }, 2500);
+            }, 800);
+        }, 2000);
     });
 
     let user = "Shivish";
@@ -128,7 +133,7 @@
     };
 
     const foods = {
-       "idli": { c: 65, s: 1, p: 2 }, "dosa": { c: 170, s: 1, p: 4 }, "paniyaram": { c: 50, s: 1, p: 1 },
+      "idli": { c: 65, s: 1, p: 2 }, "dosa": { c: 170, s: 1, p: 4 }, "paniyaram": { c: 50, s: 1, p: 1 },
         "sambar": { c: 120, s: 3, p: 5 }, "coconut chutney": { c: 90, s: 1, p: 2 }, "kuruma": { c: 180, s: 3, p: 4 },
         "chicken 65": { c: 320, s: 1, p: 22 }, "parotta": { c: 260, s: 2, p: 5 }, "biryani": { c: 480, s: 2, p: 18 },
         "tomato chutney": { c: 45, s: 4, p: 1 }, "peanut chutney": { c: 150, s: 2, p: 6 },
@@ -159,9 +164,8 @@
 
     function calculateAge(dobString) {
         const birthDate = new Date(dobString);
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+        let age = 2025 - birthDate.getFullYear();
+        if (today < new Date(2025, birthDate.getMonth(), birthDate.getDate())) age--;
         return age;
     }
 
@@ -181,7 +185,7 @@
         if (match) {
             const f = foods[match];
             data[user].c += f.c; data[user].s += f.s; data[user].p += f.p;
-            data[user].h.unshift(`[Logged] ${match.toUpperCase()}`);
+            data[user].h.unshift(`[${new Date().toLocaleTimeString()}] ${match.toUpperCase()}`);
             updateUI();
             document.getElementById('foodIn').value = "";
         }
@@ -189,31 +193,26 @@
 
     function updateUI() {
         const u = data[user];
-        const age = calculateAge(u.dob);
-        
-        // Update Text
         document.getElementById('cals').innerText = u.c;
         document.getElementById('sugs').innerText = u.s;
         document.getElementById('pros').innerText = u.p;
-        
-        document.getElementById('ageDisplay').innerText = "Age: " + age + " Years";
-        document.getElementById('targetDisplay').innerHTML = `Requirement:<br>${u.targets.c} kcal / ${u.targets.p}g Protein`;
-        
-        // Update Target Labels in Boxes
-        document.getElementById('cal-target').innerText = "Target: " + u.targets.c;
-        document.getElementById('sug-target').innerText = "Limit: " + u.targets.s + "g";
-        document.getElementById('pro-target').innerText = "Goal: " + u.targets.p + "g";
+        document.getElementById('ageDisplay').innerText = "Age: " + calculateAge(u.dob) + " Yrs";
+        document.getElementById('targetDisplay').innerHTML = `Goal: ${u.targets.c} Cal / ${u.targets.s}g Sug`;
 
-        // Update Progress Bars (Average of Goal)
+        // PROGRESS BARS
         document.getElementById('cal-fill').style.width = Math.min((u.c / u.targets.c) * 100, 100) + "%";
         document.getElementById('sug-fill').style.width = Math.min((u.s / u.targets.s) * 100, 100) + "%";
         document.getElementById('pro-fill').style.width = Math.min((u.p / u.targets.p) * 100, 100) + "%";
 
+        // BIO-ALERTS LOGIC
+        document.getElementById('alert-cal').style.display = (u.c > u.targets.c) ? 'block' : 'none';
+        document.getElementById('alert-sug').style.display = (u.s > u.targets.s) ? 'block' : 'none';
+        // Warning if protein is less than 10% of calories (low nutrient density)
+        document.getElementById('alert-pro').style.display = (u.c > 500 && (u.p * 4) < (u.c * 0.1)) ? 'block' : 'none';
+
         document.getElementById('history').innerHTML = u.h.join("<br>");
-        document.getElementById('alert').style.display = (u.c > u.targets.c) ? 'block' : 'none';
     }
     updateUI();
 </script>
 </body>
 </html>
-
