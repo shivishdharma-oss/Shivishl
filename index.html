@@ -133,15 +133,24 @@
     };
 
     const foods = {
-        "soda": { c: 150, s: 39, p: 0 },
-        "biryani": { c: 600, s: 2, p: 18 },
-        "pizza": { c: 300, s: 5, p: 10 },
-        "cupcake": { c: 250, s: 25, p: 2 },
-        "pasta": { c: 350, s: 6, p: 12 },
-        "sambar": { c: 120, s: 3, p: 5 },
-        "parotta": { c: 260, s: 2, p: 5 }
-    };
+       "idli": { c: 65, s: 1, p: 2 }, "dosa": { c: 170, s: 1, p: 4 }, "paniyaram": { c: 50, s: 1, p: 1 },
+        "sambar": { c: 120, s: 3, p: 5 }, "coconut chutney": { c: 90, s: 1, p: 2 }, "tomato chutney": { c: 45, s: 4, p: 1 },
+        "peanut chutney": { c: 150, s: 2, p: 6 }, "kuruma": { c: 180, s: 3, p: 4 }, "parotta": { c: 260, s: 2, p: 5 },
+        "chicken 65": { c: 320, s: 1, p: 22 }, "biryani": { c: 480, s: 2, p: 18 },
 
+        // --- FRIED RICE & ROLLS ---
+        "egg fried rice": { c: 350, s: 2, p: 12 }, "chicken fried rice": { c: 450, s: 2, p: 18 },
+        "veg fried rice": { c: 300, s: 2, p: 6 }, "chicken roll": { c: 350, s: 4, p: 15 }, "veg roll": { c: 250, s: 5, p: 6 },
+
+        // --- GLOBAL ---
+        "pizza": { c: 285, s: 5, p: 11 }, "burger": { c: 450, s: 9, p: 18 }, "pasta": { c: 350, s: 6, p: 12 },
+        "noodles": { c: 380, s: 4, p: 8 }, "sushi": { c: 250, s: 6, p: 15 }, "taco": { c: 210, s: 2, p: 10 },
+        "shawarma": { c: 400, s: 5, p: 25 }, "ramen": { c: 450, s: 5, p: 20 },
+
+        // --- DESSERTS ---
+        "cupcake": { c: 250, s: 22, p: 3 }, "chocolate": { c: 540, s: 48, p: 5 }, "donut": { c: 250, s: 25, p: 2 },
+        "gulab jamun": { c: 150, s: 28, p: 2 }, "soda": { c: 150, s: 39, p: 0 }
+    };
     function calculateAge(dobString) {
         const birthDate = new Date(dobString);
         let age = 2025 - birthDate.getFullYear();
@@ -196,3 +205,4 @@
 </script>
 </body>
 </html>
+
