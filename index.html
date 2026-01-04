@@ -1,117 +1,172 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SHIVISH HEALTH CORE</title>
+    <title>AETHER_HEALTH // V20</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #1a1a1a; color: white; padding: 20px; }
-        .container { display: flex; gap: 20px; max-width: 900px; margin: auto; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300&display=swap');
         
-        /* Sidebar */
-        .sidebar { background: #222; padding: 20px; border-radius: 10px; width: 200px; border: 2px solid #00f3ff; }
-        button.user-btn { 
-            display: block; width: 100%; padding: 10px; margin-bottom: 10px; 
-            cursor: pointer; background: #333; color: white; border: 1px solid #555; border-radius: 5px;
+        :root { --neon: #00f3ff; --glow: rgba(0, 243, 255, 0.4); --bg: #050508; }
+
+        * { box-sizing: border-box; cursor: crosshair; }
+        body { background: var(--bg); color: white; font-family: 'JetBrains Mono', monospace; margin: 0; overflow: hidden; height: 100vh; }
+
+        /* --- BACKGROUND GRID EFFECT --- */
+        body::before {
+            content: ""; position: fixed; width: 200%; height: 200%;
+            background-image: linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px; transform: perspective(500px) rotateX(60deg);
+            bottom: -50%; left: -50%; z-index: -1; animation: grid-move 20s linear infinite;
         }
-        button.active { background: #00f3ff; color: black; font-weight: bold; border-color: white; }
+        @keyframes grid-move { from { transform: perspective(500px) rotateX(60deg) translateY(0); } to { transform: perspective(500px) rotateX(60deg) translateY(50px); } }
 
-        /* Main Display */
-        .display { flex: 1; background: #222; padding: 20px; border-radius: 10px; border: 2px solid #00f3ff; }
-        .stats { display: flex; justify-content: space-around; margin: 20px 0; }
-        .stat-box { text-align: center; background: #111; padding: 10px; border-radius: 5px; width: 30%; }
-        .stat-box h2 { color: #00f3ff; margin: 5px 0; }
+        /* --- MAIN CONTAINER --- */
+        .app-shell {
+            display: flex; width: 95vw; height: 90vh; margin: 5vh auto;
+            border: 1px solid var(--neon); background: rgba(10, 10, 15, 0.9);
+            box-shadow: 0 0 20px var(--glow), inset 0 0 20px var(--glow);
+            position: relative;
+        }
 
-        /* Input */
-        .input-area { margin-top: 20px; display: flex; gap: 10px; }
-        input { flex: 1; padding: 10px; border-radius: 5px; border: none; font-size: 16px; }
-        .log-btn { padding: 10px 20px; background: #00ff88; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        
-        #history { margin-top: 20px; font-size: 12px; color: #888; border-top: 1px solid #444; padding-top: 10px; }
+        /* --- SIDEBAR --- */
+        .sidebar { width: 250px; border-right: 1px solid var(--neon); padding: 20px; display: flex; flex-direction: column; z-index: 10; }
+        .nav-btn {
+            background: none; border: 1px solid #333; color: #888; padding: 15px;
+            margin-bottom: 15px; font-family: 'Orbitron'; font-size: 12px;
+            text-align: left; transition: 0.3s; width: 100%;
+        }
+        .nav-btn:hover { border-color: var(--neon); color: white; box-shadow: 0 0 10px var(--glow); }
+        .nav-btn.active { background: var(--neon); color: black; font-weight: bold; border-color: white; box-shadow: 0 0 20px var(--neon); }
+
+        /* --- MAIN CONTENT --- */
+        .main { flex: 1; padding: 40px; display: flex; flex-direction: column; z-index: 10; }
+        .header { border-bottom: 1px solid var(--neon); margin-bottom: 30px; padding-bottom: 10px; }
+        .header h1 { font-family: 'Orbitron'; margin: 0; letter-spacing: 5px; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .stat-card {
+            background: rgba(0,0,0,0.5); border: 1px solid #222; padding: 20px;
+            position: relative; overflow: hidden;
+        }
+        .stat-card::after { content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--neon); }
+        .stat-card span { font-size: 10px; color: #555; letter-spacing: 2px; }
+        .stat-card h2 { font-family: 'Orbitron'; margin: 10px 0; font-size: 32px; color: var(--neon); }
+
+        /* --- INPUT AREA --- */
+        .input-box { margin-top: auto; position: relative; display: flex; gap: 10px; }
+        input {
+            flex: 1; background: #000; border: 1px solid var(--neon); padding: 20px;
+            color: white; font-family: 'JetBrains Mono'; font-size: 16px; outline: none;
+        }
+        .log-btn {
+            background: var(--neon); border: none; padding: 0 30px; font-family: 'Orbitron';
+            font-weight: bold; font-size: 14px; transition: 0.2s;
+        }
+        .log-btn:hover { background: white; box-shadow: 0 0 20px white; }
+
+        /* --- HISTORY --- */
+        #history { margin-top: 20px; height: 100px; overflow-y: auto; color: #444; font-size: 12px; border-top: 1px solid #111; padding-top: 10px; }
+
+        /* --- THE BOOT EFFECT (Non-Blocking) --- */
+        #overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: black; z-index: 1000; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; pointer-events: none; transition: 1s;
+        }
+        .scanline { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 50%, rgba(0, 243, 255, 0.05) 50%); background-size: 100% 4px; pointer-events: none; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="sidebar">
-        <h3 style="margin-top:0">MEMBERS</h3>
-        <button id="btn-Shivish" class="user-btn active" onclick="setUser('Shivish')">SHIVISH</button>
-        <button id="btn-Father" class="user-btn" onclick="setUser('Father')">FATHER</button>
-        <button id="btn-Mother" class="user-btn" onclick="setUser('Mother')">MOTHER</button>
-        <div style="font-size:12px; margin-top:20px; color:#aaa;">
-            DAILY GOAL: <b id="goal-p" style="color:#00ff88">45g</b> Protein
-        </div>
+    <div class="scanline"></div>
+
+    <div id="overlay">
+        <h1 style="font-family:'Orbitron'; color:var(--neon); letter-spacing:15px; animation: blink 0.1s infinite;">AETHER_OS</h1>
+        <p style="color:#555">SYNCING_BIO_NODES...</p>
     </div>
 
-    <div class="display">
-        <h2 id="user-title" style="margin-top:0">PROFILE: SHIVISH</h2>
-        
-        <div class="stats">
-            <div class="stat-box">CALORIES<h2 id="v-c">0</h2></div>
-            <div class="stat-box">SUGAR<h2 id="v-s">0</h2></div>
-            <div class="stat-box">PROTEIN<h2 id="v-p">0</h2></div>
+    <div class="app-shell">
+        <div class="sidebar">
+            <p style="font-size: 9px; color: var(--neon); margin-bottom: 20px;">[ SUBJECT_SELECTION ]</p>
+            <button id="btn-Shivish" class="nav-btn active" onclick="setUser('Shivish')">SHIVISH</button>
+            <button id="btn-Father" class="nav-btn" onclick="setUser('Father')">FATHER</button>
+            <button id="btn-Mother" class="nav-btn" onclick="setUser('Mother')">MOTHER</button>
+            
+            <div style="margin-top: auto; padding: 15px; background: rgba(0, 243, 255, 0.05); border: 1px solid #222;">
+                <span style="font-size: 9px; color: #555;">GOAL:</span><br>
+                <b id="goal-p" style="color:var(--neon); font-family:'Orbitron';">45g</b> <span style="font-size:9px">Protein</span>
+            </div>
         </div>
 
-        <div class="input-area">
-            <input type="text" id="dish-name" placeholder="Type: Pizza, Dosa, Idli...">
-            <button class="log-btn" onclick="logData()">LOG DISH</button>
-        </div>
+        <div class="main">
+            <div class="header">
+                <h1 id="user-title">USER_SHIVISH</h1>
+            </div>
 
-        <div id="history">History ready...</div>
+            <div class="stats-grid">
+                <div class="stat-card"><span>ENERGY_KCAL</span><h2 id="v-c">0</h2></div>
+                <div class="stat-card"><span>GLUCOSE_G</span><h2 id="v-s">0</h2></div>
+                <div class="stat-card"><span>PROTEIN_G</span><h2 id="v-p">0</h2></div>
+            </div>
+
+            <div id="history">// LOG_READY...</div>
+
+            <div class="input-box">
+                <input type="text" id="food-in" placeholder="SCAN_DISH_NAME..." autocomplete="off">
+                <button class="log-btn" onclick="logData()">EXECUTE_LOG</button>
+            </div>
+        </div>
     </div>
-</div>
 
 <script>
-    var foodData = {
-        "pizza": {c: 280, s: 5, p: 12},
-        "dosa": {c: 170, s: 1, p: 4},
-        "idli": {c: 65, s: 1, p: 2},
-        "biryani": {c: 550, s: 2, p: 18}
+    var foodDB = {
+        "pizza": {c: 280, s: 5, p: 12}, "biryani": {c: 550, s: 2, p: 18},
+        "dosa": {c: 170, s: 1, p: 4}, "idli": {c: 65, s: 1, p: 2}
     };
 
     var current = "Shivish";
-    var userProfiles = {
+    var userStore = {
         "Shivish": {c:0, s:0, p:0, h:[], goal:45},
         "Father": {c:0, s:0, p:0, h:[], goal:60},
         "Mother": {c:0, s:0, p:0, h:[], goal:50}
     };
 
+    // Booting logic
+    setTimeout(() => { 
+        document.getElementById('overlay').style.opacity = '0'; 
+    }, 1500);
+
     function setUser(name) {
         current = name;
-        
-        // Update Button Colors
-        document.querySelectorAll('.user-btn').forEach(function(b) { b.classList.remove('active'); });
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('btn-' + name).classList.add('active');
-
-        // Update Text
-        document.getElementById('user-title').innerText = "PROFILE: " + name.toUpperCase();
-        document.getElementById('goal-p').innerText = userProfiles[name].goal + "g";
-        
+        document.getElementById('user-title').innerText = "USER_" + name.toUpperCase();
+        document.getElementById('goal-p').innerText = userStore[name].goal + "g";
         updateUI();
     }
 
     function logData() {
-        var input = document.getElementById('dish-name');
+        var input = document.getElementById('food-in');
         var name = input.value.toLowerCase().trim();
-        if (name === "") return;
+        if (!name) return;
 
-        var nutrients = foodData[name] || {c: 200, s: 5, p: 5};
-
-        userProfiles[current].c += nutrients.c;
-        userProfiles[current].s += nutrients.s;
-        userProfiles[current].p += nutrients.p;
-        userProfiles[current].h.unshift(new Date().toLocaleTimeString() + " - " + name.toUpperCase());
+        var stats = foodDB[name] || {c: 200, s: 5, p: 5};
+        userStore[current].c += stats.c;
+        userStore[current].s += stats.s;
+        userStore[current].p += stats.p;
+        userStore[current].h.unshift("> " + new Date().toLocaleTimeString() + " : " + name.toUpperCase());
 
         input.value = "";
         updateUI();
     }
 
     function updateUI() {
-        var u = userProfiles[current];
+        var u = userStore[current];
         document.getElementById('v-c').innerText = u.c;
         document.getElementById('v-s').innerText = u.s;
         document.getElementById('v-p').innerText = u.p;
         document.getElementById('history').innerHTML = u.h.join("<br>");
     }
 </script>
-
 </body>
 </html>
