@@ -1,120 +1,161 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>AETHER_HEALTH // CMD_LOG</title>
+    <title>AETHER_HEALTH // TAB_CYCLE_OS</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300&display=swap');
         
-        :root { --neon: #00f3ff; --bg: #050508; }
+        :root { --neon: #00f3ff; --bg: #050508; --dim: #1a1a1a; }
         body { background: var(--bg); color: white; font-family: 'JetBrains Mono', monospace; margin: 0; overflow: hidden; height: 100vh; }
 
-        .app-shell { display: flex; width: 95vw; height: 90vh; margin: 5vh auto; border: 1px solid var(--neon); background: rgba(10, 10, 15, 0.9); }
-        .sidebar { width: 250px; border-right: 1px solid var(--neon); padding: 20px; }
-        .nav-btn { background: none; border: 1px solid #333; color: #888; padding: 15px; margin-bottom: 10px; font-family: 'Orbitron'; width: 100%; cursor: pointer; }
-        .nav-btn.active { background: var(--neon); color: black; font-weight: bold; }
+        .app-shell { display: flex; width: 95vw; height: 90vh; margin: 5vh auto; border: 1px solid var(--neon); background: rgba(10, 10, 15, 0.95); box-shadow: 0 0 30px rgba(0,243,255,0.15); }
+        .sidebar { width: 220px; border-right: 1px solid var(--neon); padding: 20px; }
+        .nav-btn { background: none; border: 1px solid #222; color: #555; padding: 12px; margin-bottom: 10px; font-family: 'Orbitron'; width: 100%; cursor: pointer; text-align: left; font-size: 10px; transition: 0.3s; }
+        .nav-btn.active { border-color: var(--neon); color: var(--neon); box-shadow: inset 0 0 10px var(--neon); }
 
         .main { flex: 1; padding: 40px; display: flex; flex-direction: column; position: relative; }
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0; }
-        .stat-card { background: rgba(0,0,0,0.5); border: 1px solid #222; padding: 20px; border-left: 3px solid var(--neon); }
-        .stat-card h2 { font-family: 'Orbitron'; margin: 10px 0; color: var(--neon); }
+        .stat-card { background: rgba(0,0,0,0.5); border: 1px solid #222; padding: 20px; border-left: 2px solid var(--neon); position: relative; }
+        .stat-card h2 { font-family: 'Orbitron'; margin: 5px 0; color: var(--neon); font-size: 30px; }
+        .stat-card span { font-size: 10px; color: #444; letter-spacing: 2px; }
 
-        /* --- THE COMMAND MENU --- */
+        /* --- COMMAND MENU --- */
         #cmd-menu {
-            position: absolute; bottom: 100px; left: 40px; width: 300px;
-            background: #111; border: 1px solid var(--neon); display: none;
-            box-shadow: 0 0 20px var(--neon); z-index: 100;
+            position: absolute; bottom: 100px; left: 40px; width: 320px;
+            background: #000; border: 1px solid var(--neon); display: none;
+            box-shadow: 0 0 30px rgba(0,243,255,0.3); z-index: 100;
         }
         .cmd-item {
-            padding: 12px; border-bottom: 1px solid #222; cursor: pointer;
-            display: flex; justify-content: space-between; font-size: 12px;
+            padding: 12px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; font-size: 13px; color: #666;
         }
-        .cmd-item:hover { background: var(--neon); color: black; }
-        .cmd-item span { opacity: 0.7; font-size: 10px; }
+        .cmd-item.selected { background: var(--neon); color: black; font-weight: bold; }
+        .cmd-item.selected span { color: black; opacity: 0.8; }
+        .cmd-item b { color: var(--neon); }
+        .cmd-item.selected b { color: black; }
 
-        .input-box { margin-top: auto; position: relative; }
+        .input-box { margin-top: auto; }
         input {
             width: 100%; background: #000; border: 1px solid var(--neon); padding: 20px;
             color: white; font-family: 'JetBrains Mono'; outline: none; font-size: 18px;
         }
-        #history { margin-top: 20px; height: 100px; overflow-y: auto; color: #444; font-size: 11px; }
+        #tip { color: #333; font-size: 9px; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
     <div class="app-shell">
         <div class="sidebar">
-            <button id="btn-Shivish" class="nav-btn active" onclick="setUser('Shivish')">SHIVISH</button>
-            <button id="btn-Father" class="nav-btn" onclick="setUser('Father')">FATHER</button>
-            <button id="btn-Mother" class="nav-btn" onclick="setUser('Mother')">MOTHER</button>
+            <h3 style="font-family:'Orbitron'; font-size: 10px; color: var(--neon); margin-bottom: 20px;">BIO_NETWORK</h3>
+            <button id="btn-Shivish" class="nav-btn active" onclick="setUser('Shivish')">SHIVISH.usr</button>
+            <button id="btn-Father" class="nav-btn" onclick="setUser('Father')">FATHER.usr</button>
+            <button id="btn-Mother" class="nav-btn" onclick="setUser('Mother')">MOTHER.usr</button>
         </div>
 
         <div class="main">
-            <h1 style="font-family:'Orbitron'; color:var(--neon); margin:0;">SYSTEM_STATUS</h1>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1 id="usr-tag" style="font-family:'Orbitron'; color:var(--neon); margin:0; font-size: 18px;">MONITORING: SHIVISH</h1>
+                <span id="clock" style="font-size: 12px; color: #333;"></span>
+            </div>
             
             <div class="stats-grid">
-                <div class="stat-card"><span>KCAL</span><h2 id="v-c">0</h2></div>
-                <div class="stat-card"><span>SUGAR</span><h2 id="v-s">0</h2></div>
-                <div class="stat-card"><span>PRO_G</span><h2 id="v-p">0</h2></div>
+                <div class="stat-card"><span>ENERGY</span><h2 id="v-c">0</h2></div>
+                <div class="stat-card"><span>GLUCOSE</span><h2 id="v-s">0</h2></div>
+                <div class="stat-card"><span>AMINO_ACID</span><h2 id="v-p">0</h2></div>
             </div>
 
-            <div id="history">// LOG_READY... TYPE / TO START</div>
+            <div id="history" style="height: 120px; overflow:hidden; color:#222; font-size:11px; line-height: 1.6;">Waiting for input...</div>
 
             <div class="input-box">
                 <div id="cmd-menu"></div>
-                <input type="text" id="main-in" placeholder="Type /pizza or /dosa..." onkeyup="checkCmd(event)">
+                <input type="text" id="main-in" placeholder="Type /..." onkeydown="handleKeys(event)" onkeyup="filterList(event)" autocomplete="off">
+                <div id="tip">Cycle options with [TAB] • Register with [ENTER]</div>
             </div>
         </div>
     </div>
 
 <script>
-    var foodDB = {
+    const foodDB = {
         "pizza": {c: 280, s: 5, p: 12}, "biryani": {c: 550, s: 2, p: 18},
+        "pasta": {c: 320, s: 4, p: 10}, "pancakes": {c: 250, s: 12, p: 6},
         "dosa": {c: 170, s: 1, p: 4}, "idli": {c: 65, s: 1, p: 2},
-        "burger": {c: 450, s: 7, p: 15}, "pasta": {c: 300, s: 4, p: 10}
+        "burger": {c: 450, s: 7, p: 15}, "paneer": {c: 260, s: 1, p: 18}
     };
 
-    var current = "Shivish";
-    var userStore = { "Shivish": {c:0, s:0, p:0, h:[]}, "Father": {c:0, s:0, p:0, h:[]}, "Mother": {c:0, s:0, p:0, h:[]} };
+    let current = "Shivish";
+    let userStore = { "Shivish": {c:0, s:0, p:0, h:[]}, "Father": {c:0, s:0, p:0, h:[]}, "Mother": {c:0, s:0, p:0, h:[]} };
+    
+    let matches = [];
+    let cycleIndex = -1;
 
-    function checkCmd(e) {
-        var input = e.target;
-        var val = input.value;
-        var menu = document.getElementById('cmd-menu');
-
-        // IF THE INPUT STARTS WITH /
-        if (val.startsWith("/")) {
-            var query = val.substring(1).toLowerCase(); // Remove the /
-            var matches = Object.keys(foodDB).filter(f => f.includes(query));
-
+    function handleKeys(e) {
+        if (e.key === "Tab") {
+            e.preventDefault();
             if (matches.length > 0) {
-                menu.style.display = "block";
-                menu.innerHTML = matches.map(m => `
-                    <div class="cmd-item" onclick="selectFood('${m}')">
-                        /${m} <span>${foodDB[m].p}g Protein</span>
-                    </div>
-                `).join('');
-            } else {
-                menu.style.display = "none";
+                // Cycle index
+                cycleIndex = (cycleIndex + 1) % matches.length;
+                const selectedDish = matches[cycleIndex];
+                document.getElementById('main-in').value = "/" + selectedDish;
+                renderMenu();
             }
-
-            // HIT ENTER TO LOG
-            if (e.key === "Enter" && matches.includes(query)) {
-                selectFood(query);
+        }
+        
+        if (e.key === "Enter") {
+            const val = document.getElementById('main-in').value.trim();
+            if (val.startsWith("/")) {
+                const dish = val.substring(1).toLowerCase();
+                if (foodDB[dish]) {
+                    logDish(dish);
+                }
             }
-        } else {
-            menu.style.display = "none";
         }
     }
 
-    function selectFood(name) {
-        var stats = foodDB[name];
+    function filterList(e) {
+        if (e.key === "Tab" || e.key === "Enter") return;
+
+        const val = e.target.value;
+        const menu = document.getElementById('cmd-menu');
+
+        if (val.startsWith("/")) {
+            const query = val.substring(1).toLowerCase();
+            matches = Object.keys(foodDB).filter(f => f.startsWith(query));
+
+            if (matches.length > 0 && query !== "") {
+                menu.style.display = "block";
+                cycleIndex = 0; // Default to first match
+                renderMenu();
+            } else {
+                menu.style.display = "none";
+                matches = [];
+                cycleIndex = -1;
+            }
+        } else {
+            menu.style.display = "none";
+            matches = [];
+            cycleIndex = -1;
+        }
+    }
+
+    function renderMenu() {
+        const menu = document.getElementById('cmd-menu');
+        menu.innerHTML = matches.map((m, idx) => `
+            <div class="cmd-item ${idx === cycleIndex ? 'selected' : ''}">
+                <span>/<b>${m}</b></span> <span>${foodDB[m].p}g Protein</span>
+            </div>
+        `).join('');
+    }
+
+    function logDish(name) {
+        const stats = foodDB[name];
         userStore[current].c += stats.c;
         userStore[current].s += stats.s;
         userStore[current].p += stats.p;
-        userStore[current].h.unshift("> COMMAND_LOG: " + name.toUpperCase());
+        userStore[current].h.unshift(`> ${new Date().toLocaleTimeString()} : LOG_${name.toUpperCase()}`);
         
         document.getElementById('main-in').value = "";
         document.getElementById('cmd-menu').style.display = "none";
+        matches = [];
+        cycleIndex = -1;
         updateUI();
     }
 
@@ -122,16 +163,19 @@
         current = name;
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('btn-' + name).classList.add('active');
+        document.getElementById('usr-tag').innerText = "MONITORING: " + name.toUpperCase();
         updateUI();
     }
 
     function updateUI() {
-        var u = userStore[current];
+        const u = userStore[current];
         document.getElementById('v-c').innerText = u.c;
         document.getElementById('v-s').innerText = u.s;
         document.getElementById('v-p').innerText = u.p;
         document.getElementById('history').innerHTML = u.h.join("<br>");
     }
+
+    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
 </script>
 </body>
-</html>s
+</html>
