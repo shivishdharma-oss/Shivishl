@@ -1,166 +1,128 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>AETHER_HEALTH // SECURE_LOG</title>
+    <title>AETHER_HEALTH // CMD_LOG</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300&display=swap');
         
-        :root { --neon: #00f3ff; --error: #ff4444; --bg: #050508; }
-
+        :root { --neon: #00f3ff; --bg: #050508; }
         body { background: var(--bg); color: white; font-family: 'JetBrains Mono', monospace; margin: 0; overflow: hidden; height: 100vh; }
 
-        /* --- UI SHELL --- */
-        .app-shell {
-            display: flex; width: 95vw; height: 90vh; margin: 5vh auto;
-            border: 1px solid var(--neon); background: rgba(10, 10, 15, 0.9);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
-        }
-
+        .app-shell { display: flex; width: 95vw; height: 90vh; margin: 5vh auto; border: 1px solid var(--neon); background: rgba(10, 10, 15, 0.9); }
         .sidebar { width: 250px; border-right: 1px solid var(--neon); padding: 20px; }
-        .nav-btn {
-            background: none; border: 1px solid #333; color: #888; padding: 15px;
-            margin-bottom: 15px; font-family: 'Orbitron'; font-size: 11px;
-            text-align: left; transition: 0.3s; width: 100%; cursor: pointer;
-        }
-        .nav-btn.active { background: var(--neon); color: black; font-weight: bold; border-color: white; }
+        .nav-btn { background: none; border: 1px solid #333; color: #888; padding: 15px; margin-bottom: 10px; font-family: 'Orbitron'; width: 100%; cursor: pointer; }
+        .nav-btn.active { background: var(--neon); color: black; font-weight: bold; }
 
-        .main { flex: 1; padding: 40px; display: flex; flex-direction: column; }
-        .header h1 { font-family: 'Orbitron'; margin: 0; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
-
-        /* --- STATS --- */
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px;}
+        .main { flex: 1; padding: 40px; display: flex; flex-direction: column; position: relative; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0; }
         .stat-card { background: rgba(0,0,0,0.5); border: 1px solid #222; padding: 20px; border-left: 3px solid var(--neon); }
-        .stat-card span { font-size: 10px; color: #555; }
         .stat-card h2 { font-family: 'Orbitron'; margin: 10px 0; color: var(--neon); }
 
-        /* --- VALIDATION ALERT --- */
-        #error-msg { 
-            color: var(--error); font-weight: bold; font-size: 12px; 
-            margin-bottom: 10px; height: 20px; visibility: hidden; 
-            text-shadow: 0 0 5px var(--error);
+        /* --- THE COMMAND MENU --- */
+        #cmd-menu {
+            position: absolute; bottom: 100px; left: 40px; width: 300px;
+            background: #111; border: 1px solid var(--neon); display: none;
+            box-shadow: 0 0 20px var(--neon); z-index: 100;
         }
+        .cmd-item {
+            padding: 12px; border-bottom: 1px solid #222; cursor: pointer;
+            display: flex; justify-content: space-between; font-size: 12px;
+        }
+        .cmd-item:hover { background: var(--neon); color: black; }
+        .cmd-item span { opacity: 0.7; font-size: 10px; }
 
-        /* --- INPUT --- */
-        .input-box { margin-top: auto; position: relative; display: flex; gap: 10px; }
+        .input-box { margin-top: auto; position: relative; }
         input {
-            flex: 1; background: #000; border: 1px solid var(--neon); padding: 20px;
-            color: white; font-family: 'JetBrains Mono'; outline: none;
+            width: 100%; background: #000; border: 1px solid var(--neon); padding: 20px;
+            color: white; font-family: 'JetBrains Mono'; outline: none; font-size: 18px;
         }
-        input.invalid { border-color: var(--error); color: var(--error); }
-        .log-btn {
-            background: var(--neon); border: none; padding: 0 30px; font-family: 'Orbitron';
-            font-weight: bold; cursor: pointer;
-        }
-
-        #history { margin-top: 20px; height: 100px; overflow-y: auto; color: #444; font-size: 12px; }
+        #history { margin-top: 20px; height: 100px; overflow-y: auto; color: #444; font-size: 11px; }
     </style>
 </head>
 <body>
 
     <div class="app-shell">
         <div class="sidebar">
-            <p style="font-size: 9px; color: var(--neon); margin-bottom: 20px;">[ AUTH_USERS ]</p>
             <button id="btn-Shivish" class="nav-btn active" onclick="setUser('Shivish')">SHIVISH</button>
             <button id="btn-Father" class="nav-btn" onclick="setUser('Father')">FATHER</button>
             <button id="btn-Mother" class="nav-btn" onclick="setUser('Mother')">MOTHER</button>
         </div>
 
         <div class="main">
-            <div class="header">
-                <h1 id="user-title">USER_SHIVISH</h1>
-            </div>
-
+            <h1 style="font-family:'Orbitron'; color:var(--neon); margin:0;">SYSTEM_STATUS</h1>
+            
             <div class="stats-grid">
                 <div class="stat-card"><span>KCAL</span><h2 id="v-c">0</h2></div>
                 <div class="stat-card"><span>SUGAR</span><h2 id="v-s">0</h2></div>
                 <div class="stat-card"><span>PRO_G</span><h2 id="v-p">0</h2></div>
             </div>
 
-            <div id="history">// SYSTEM_READY</div>
+            <div id="history">// LOG_READY... TYPE / TO START</div>
 
-            <div class="input-box" style="flex-direction: column;">
-                <div id="error-msg">⚠ ERROR: DISH NOT FOUND IN DATABASE</div>
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="food-in" placeholder="ENTER FOOD ITEM..." oninput="clearError()">
-                    <button class="log-btn" onclick="logData()">LOG_DATA</button>
-                </div>
+            <div class="input-box">
+                <div id="cmd-menu"></div>
+                <input type="text" id="main-in" placeholder="Type /pizza or /dosa..." onkeyup="checkCmd(event)">
             </div>
         </div>
     </div>
 
 <script>
-    // Only these items will be accepted
     var foodDB = {
-       "idli": { c: 65, s: 1, p: 2 }, "dosa": { c: 170, s: 1, p: 4 }, "paniyaram": { c: 50, s: 1, p: 1 },
-        "sambar": { c: 120, s: 3, p: 5 }, "coconut chutney": { c: 90, s: 1, p: 2 }, "kuruma": { c: 180, s: 3, p: 4 },
-        "chicken 65": { c: 320, s: 1, p: 22 }, "parotta": { c: 260, s: 2, p: 5 }, "biryani": { c: 480, s: 2, p: 18 },
-        "tomato chutney": { c: 45, s: 4, p: 1 }, "peanut chutney": { c: 150, s: 2, p: 6 },
-
-        // --- GLOBAL (WESTERN) ---
-        "pizza": { c: 285, s: 5, p: 11 }, "burger": { c: 450, s: 9, p: 18 }, "pasta": { c: 350, s: 6, p: 12 },
-        "steak": { c: 600, s: 0, p: 50 }, "sandwich": { c: 250, s: 5, p: 8 }, "french fries": { c: 312, s: 1, p: 3 },
-        "hot dog": { c: 290, s: 4, p: 10 }, "pancakes": { c: 350, s: 15, p: 6 },
-
-        // --- ASIAN (CHINESE/JAPANESE) ---
-        "noodles": { c: 380, s: 4, p: 8 }, "egg fried rice": { c: 350, s: 2, p: 12 }, "chicken fried rice": { c: 450, s: 2, p: 18 },
-        "sushi": { c: 250, s: 6, p: 15 }, "dim sum": { c: 50, s: 1, p: 3 }, "ramen": { c: 450, s: 5, p: 20 },
-        "manchurian": { c: 280, s: 8, p: 5 }, "spring roll": { c: 150, s: 2, p: 4 },
-
-        // --- MEXICAN & ARABIC ---
-        "taco": { c: 210, s: 2, p: 10 }, "burrito": { c: 600, s: 5, p: 25 }, "nachos": { c: 300, s: 3, p: 8 },
-        "shawarma": { c: 400, s: 5, p: 25 }, "falafel": { c: 330, s: 2, p: 13 }, "hummus": { c: 160, s: 1, p: 8 },
-        "kebab": { c: 250, s: 1, p: 20 },
-
-        // --- NORTH INDIAN ---
-        "naan": { c: 260, s: 3, p: 8 }, "paneer masala": { c: 380, s: 7, p: 12 }, "chole bhature": { c: 450, s: 5, p: 10 },
-        "mutton curry": { c: 420, s: 1, p: 28 }, "samosa": { c: 150, s: 1, p: 3 }, "dal": { c: 150, s: 1, p: 8 },
-
-        // --- SWEETS & SNACKS ---
-        "cupcake": { c: 250, s: 22, p: 3 }, "chocolate": { c: 540, s: 48, p: 5 }, "donut": { c: 250, s: 25, p: 2 },
-        "gulab jamun": { c: 150, s: 28, p: 2 }, "ice cream": { c: 210, s: 24, p: 3 }, "soda": { c: 150, s: 39, p: 0 }
+        "pizza": {c: 280, s: 5, p: 12}, "biryani": {c: 550, s: 2, p: 18},
+        "dosa": {c: 170, s: 1, p: 4}, "idli": {c: 65, s: 1, p: 2},
+        "burger": {c: 450, s: 7, p: 15}, "pasta": {c: 300, s: 4, p: 10}
     };
 
     var current = "Shivish";
-    var userStore = {
-        "Shivish": {c:0, s:0, p:0, h:[]},
-        "Father": {c:0, s:0, p:0, h:[]},
-        "Mother": {c:0, s:0, p:0, h:[]}
-    };
+    var userStore = { "Shivish": {c:0, s:0, p:0, h:[]}, "Father": {c:0, s:0, p:0, h:[]}, "Mother": {c:0, s:0, p:0, h:[]} };
+
+    function checkCmd(e) {
+        var input = e.target;
+        var val = input.value;
+        var menu = document.getElementById('cmd-menu');
+
+        // IF THE INPUT STARTS WITH /
+        if (val.startsWith("/")) {
+            var query = val.substring(1).toLowerCase(); // Remove the /
+            var matches = Object.keys(foodDB).filter(f => f.includes(query));
+
+            if (matches.length > 0) {
+                menu.style.display = "block";
+                menu.innerHTML = matches.map(m => `
+                    <div class="cmd-item" onclick="selectFood('${m}')">
+                        /${m} <span>${foodDB[m].p}g Protein</span>
+                    </div>
+                `).join('');
+            } else {
+                menu.style.display = "none";
+            }
+
+            // HIT ENTER TO LOG
+            if (e.key === "Enter" && matches.includes(query)) {
+                selectFood(query);
+            }
+        } else {
+            menu.style.display = "none";
+        }
+    }
+
+    function selectFood(name) {
+        var stats = foodDB[name];
+        userStore[current].c += stats.c;
+        userStore[current].s += stats.s;
+        userStore[current].p += stats.p;
+        userStore[current].h.unshift("> COMMAND_LOG: " + name.toUpperCase());
+        
+        document.getElementById('main-in').value = "";
+        document.getElementById('cmd-menu').style.display = "none";
+        updateUI();
+    }
 
     function setUser(name) {
         current = name;
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('btn-' + name).classList.add('active');
-        document.getElementById('user-title').innerText = "USER_" + name.toUpperCase();
         updateUI();
-    }
-
-    function clearError() {
-        document.getElementById('error-msg').style.visibility = "hidden";
-        document.getElementById('food-in').classList.remove('invalid');
-    }
-
-    function logData() {
-        var input = document.getElementById('food-in');
-        var err = document.getElementById('error-msg');
-        var name = input.value.toLowerCase().trim();
-
-        // CHECK IF DISH EXISTS IN DATABASE
-        if (foodDB[name]) {
-            var stats = foodDB[name];
-            userStore[current].c += stats.c;
-            userStore[current].s += stats.s;
-            userStore[current].p += stats.p;
-            userStore[current].h.unshift("> LOGGED: " + name.toUpperCase());
-            
-            input.value = "";
-            clearError();
-            updateUI();
-        } else {
-            // SHOW ERROR IF NOT FOUND (Like if you type 'Shivish')
-            err.style.visibility = "visible";
-            input.classList.add('invalid');
-        }
     }
 
     function updateUI() {
@@ -172,5 +134,4 @@
     }
 </script>
 </body>
-</html>
-
+</html>s
