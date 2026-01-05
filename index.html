@@ -70,11 +70,30 @@
 
 <script>
     const foodDB = {
-        "pizza": {c: 280, s: 5, p: 12}, "biryani": {c: 550, s: 2, p: 18},
-        "pasta": {c: 320, s: 4, p: 10}, "pancakes": {c: 250, s: 12, p: 6},
-        "dosa": {c: 170, s: 1, p: 4}, "idli": {c: 65, s: 1, p: 2},
-        "burger": {c: 450, s: 7, p: 15}, "paneer": {c: 260, s: 1, p: 18}
-    };
+      // South Indian
+        "idli": { c: 65, s: 1, p: 2 }, "dosa": { c: 170, s: 1, p: 4 }, "vada": { c: 110, s: 0, p: 3 }, 
+        "pongal": { c: 210, s: 1, p: 5 }, "upma": { c: 190, s: 2, p: 4 }, "appam": { c: 120, s: 4, p: 2 },
+        "sambar rice": { c: 320, s: 3, p: 8 }, "curd rice": { c: 200, s: 2, p: 5 }, "lemon rice": { c: 250, s: 1, p: 4 },
+        "chicken biryani": { c: 480, s: 2, p: 18 }, "mutton biryani": { c: 520, s: 2, p: 22 }, "rasam": { c: 60, s: 1, p: 1 },
+        "parotta": { c: 260, s: 2, p: 5 }, "kothu parotta": { c: 450, s: 3, p: 12 }, "payasam": { c: 250, s: 30, p: 4 },
+        
+        // North Indian
+        "naan": { c: 260, s: 3, p: 8 }, "paneer masala": { c: 350, s: 6, p: 12 }, "chole bhature": { c: 450, s: 4, p: 10 },
+        "dal makhani": { c: 300, s: 2, p: 9 }, "butter chicken": { c: 450, s: 5, p: 20 }, "samosa": { c: 150, s: 1, p: 3 },
+        
+        // Global
+        "pizza": { c: 280, s: 5, p: 10 }, "burger": { c: 450, s: 8, p: 18 }, "pasta": { c: 320, s: 5, p: 11 },
+        "french fries": { c: 310, s: 1, p: 3 }, "noodles": { c: 380, s: 4, p: 8 }, "sandwich": { c: 250, s: 4, p: 8 },
+        "sushi": { c: 300, s: 5, p: 12 }, "taco": { c: 210, s: 2, p: 10 },
+        
+        // Drinks & Desserts
+        "soda": { c: 150, s: 39, p: 0 }, "filter coffee": { c: 80, s: 12, p: 2 }, "tea": { c: 60, s: 10, p: 1 },
+        "fruit juice": { c: 140, s: 25, p: 1 }, "gulab jamun": { c: 150, s: 25, p: 2 }, "ice cream": { c: 210, s: 22, p: 4 },
+        "chocolate": { c: 540, s: 45, p: 5 }, "donut": { c: 250, s: 25, p: 2 },
+        
+        // Healthy
+        "apple": { c: 52, s: 10, p: 1 }, "banana": { c: 89, s: 12, p: 1 }, "egg": { c: 70, s: 0, p: 6 },
+        "chicken breast": { c: 165, s: 0, p: 31 }, "salad": { c: 100, s: 3, p: 2 }, "milk": { c: 42, s: 5, p: 3 }
 
     let current = "Shivish";
     let userStore = { "Shivish": {c:0, s:0, p:0, h:[]}, "Father": {c:0, s:0, p:0, h:[]}, "Mother": {c:0, s:0, p:0, h:[]} };
@@ -350,4 +369,3 @@
 </script>
 </body>
 </html>
-
